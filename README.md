@@ -4,8 +4,6 @@ A UI client and a middleware (BFF) API for an AI service. Users submit a prompt 
 
 No LLM is called: the "AI" is a provider interface backed by multilingual insights seeded into Postgres.
 
-> This is the `ai-insights` branch, built on the starter kept on `main` (FastAPI + Next.js + Postgres + Redis, one shared `.env`). Design notes: [docs/plans/2026-09-17-ai-insights-design.md](docs/plans/2026-09-17-ai-insights-design.md).
-
 | Path | What it is |
 | --- | --- |
 | [`apps/api`](apps/api/README.md) | The BFF: FastAPI · async SQLAlchemy 2 + psycopg 3 · Alembic · Redis · Poetry · pytest, ruff, mypy |
