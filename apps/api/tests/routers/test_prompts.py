@@ -242,6 +242,14 @@ async def test_next_page_continues_the_same_result(db_client: AsyncClient) -> No
     assert first_ids.isdisjoint(insight["id"] for insight in second["insights"])
 
 
+async def test_closest_matches_rank_first(db_client: AsyncClient) -> None:
+    _, payload = await submit(db_client, AI_HEALTHCARE)
+
+    assert payload["insights"][0]["title"] == (
+        "AI-assisted diagnostics are moving into clinics"
+    )
+
+
 async def test_small_results_fit_on_one_page(db_client: AsyncClient) -> None:
     _, payload = await submit(
         db_client, {"prompt": "better sleep routine", "targetLanguage": "en"}
@@ -272,8 +280,11 @@ async def test_results_use_the_target_language(db_client: AsyncClient) -> None:
         {"prompt": "¿Cómo está cambiando la IA la salud?", "targetLanguage": "es"},
     )
 
+    titles = [insight["title"] for insight in payload["insights"]]
     assert payload["pagination"]["totalItems"] == 20
-    assert {insight["title"] for insight in payload["insights"]} <= spanish_titles
+    assert set(titles) <= spanish_titles
+    # Sharing "IA" with the prompt ranks it onto the first page
+    assert "Los diagnósticos asistidos por IA llegan a las clínicas" in titles
 
 
 @pytest.mark.parametrize("page", ["0", "-1", "abc", "3", "1.5"])

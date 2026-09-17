@@ -41,8 +41,7 @@ Error body: `{"error": {"code", "message", "request_id", "details"}}`.
 
 **Clarification check.** It runs on the text of the pending turns, meaning this conversation's prompts since its last `SUCCESS`, plus the new prompt. Clarification is needed when:
 - the combined text is under 5 characters;
-- it has fewer than 2 meaningful words (after removing stopwords and vague words in en/es/fr/de such as "help", "more", "explain");
-- or the prompt is only a vague phrase with no pending context.
+- or it has fewer than 2 meaningful words, after removing stopwords and vague words in en/es/fr/de such as "help", "more" and "explain". This also covers vague phrases like "tell me more".
 
 Clarification response: `{"status": "NEEDS_CLARIFICATION", "message": "Please provide more details", "contextId"}`. Every response returns a `contextId`, and a new conversation is created when none is sent.
 
@@ -57,9 +56,9 @@ Returns a page of the stored result in the stored order. Errors: 404 `RESPONSE_N
 ### Dummy provider
 
 `DummyInsightProvider.find_insight_ids(session, text, language)`:
-1. Tokenizes the text, lowercased and with accents stripped.
-2. Scores each insight in that language by overlap with its `keywords`: multilingual topic keywords plus its tags.
-3. Returns the ids with a score above 0, ordered by score, then title.
+1. Takes the meaningful words of the text: lowercased, accents stripped, filler words dropped.
+2. Keeps insights in that language whose `keywords` (multilingual topic keywords plus tags) match at least one of those words.
+3. Ranks them by keyword hits plus words shared with the insight's own title and content, then by title. The second score keeps non-English rankings meaningful.
 
 Seed data: 36 insights per language across technology (12), health (8), finance (6), climate (5) and travel (5).
 
@@ -71,8 +70,9 @@ src/
   store/          makeStore, typed hooks, StoreProvider
   lib/api/        base RTK Query api, API error parsing
   lib/hooks/      useDebouncedValue
-  features/prompt/     api endpoints, zod schema, session slice, form + notices
+  features/prompts/    api endpoints, zod schema, session slice, form + clarification notice
   features/insights/   view slice (search, sort), filter/sort utils, results components
+  components/     cross-feature: InsightsWorkspace (page composition), ApiErrorAlert
 ```
 
 - **Global state:**
@@ -81,12 +81,13 @@ src/
   - The RTK Query cache holds the response data.
 - **API:**
   - The `submitPrompt` mutation runs `POST /api/prompts` through the Next rewrite.
-  - The `getInsights` **infinite query** is keyed by `responseId`, with `pageParam` = page and the next page taken from `pagination.hasNextPage`. Page 1 from the POST is written into its cache, so it is not fetched again.
+  - The `getInsights` **infinite query** is keyed by `responseId`, with `pageParam` = page and the next page taken from `pagination.hasNextPage`.
+  - Page 1 from the POST is written into that cache with `upsertQueryEntries` inside the mutation's `queryFn`, which is synchronous and runs before the mutation resolves. Seeding in `onQueryStarted` would run after `responseId` reached the UI, letting the results view request page 1 again.
 - **Form:**
   - `mode: "onChange"`, and submit is disabled until the Zod schema passes (prompt 1–2000 chars trimmed, language from the enum).
   - The 5-character rule is deliberately **not** enforced client-side: that decision belongs to the backend.
   - 4xx field codes are mapped onto form fields, and everything else goes to a structured error alert.
-- **Clarification:** a notice shows the message and the pending turns. The next submit sends `contextId`, and "Start over" clears it.
+- **Clarification:** a notice above the form shows the message and the pending turns. The next submit sends `contextId`, and "Start over" clears it.
 - **Performance:**
   - The search input keeps local state, and only the debounced value (300 ms) reaches the store.
   - Flattening pages, filtering and sorting are separate `useMemo` steps.

@@ -1,31 +1,43 @@
-# starter
+# AI Insights
 
-A monorepo starter with a **FastAPI** backend, a **Next.js** frontend, and **Postgres + Redis** running in Docker. Everything reads one shared `.env` file at the repo root.
+A UI client and a middleware (BFF) API for an AI service. Users submit a prompt and a target language. The API validates it strictly, asks for clarification when the prompt is too vague (without calling the AI), or returns paginated insights. The web app handles all three outcomes, with load more, debounced search and sorting.
+
+No LLM is called: the "AI" is a provider interface backed by multilingual insights seeded into Postgres.
+
+> This is the `ai-insights` branch, built on the starter kept on `main` (FastAPI + Next.js + Postgres + Redis, one shared `.env`). Design notes: [docs/plans/2026-09-17-ai-insights-design.md](docs/plans/2026-09-17-ai-insights-design.md).
 
 | Path | What it is |
 | --- | --- |
-| [`apps/api`](apps/api/README.md) | FastAPI · async SQLAlchemy 2 + psycopg 3 · Alembic · Redis · Poetry · pytest, ruff, mypy |
-| [`apps/web`](apps/web/README.md) | Next.js 16 (App Router, Turbopack) · React 19 · Tailwind CSS 4 · TypeScript · ESLint · Vitest · Playwright |
+| [`apps/api`](apps/api/README.md) | The BFF: FastAPI · async SQLAlchemy 2 + psycopg 3 · Alembic · Redis · Poetry · pytest, ruff, mypy |
+| [`apps/web`](apps/web/README.md) | The client: Next.js 16 · React 19 · TypeScript · Redux Toolkit + RTK Query · react-hook-form + Zod · Tailwind CSS 4 · Vitest · Playwright |
 | [`infra/docker-compose.yml`](infra/docker-compose.yml) | Postgres 17 with pgvector, Redis 7, and optional containers for the api and web apps |
 | [`.github/workflows/ci.yml`](.github/workflows/ci.yml) | CI: lint, typecheck, unit and database tests, migration check, web build, end-to-end tests |
 
 ## What works today
 
-- **API:**
+- **Prompts API** ([details](apps/api/README.md#prompts-and-insights)):
+  - `POST /prompts` takes `prompt`, `targetLanguage` (`en`, `es`, `fr`, `de`) and an optional `contextId`.
+  - It validates in a fixed order, with specific codes and messages (`PROMPT_REQUIRED`, `INVALID_LANGUAGE`, `INVALID_CONTEXT_ID`, ...).
+  - Vague prompts get `NEEDS_CLARIFICATION` before any AI call. A follow-up sent with the `contextId` is judged together with the earlier prompts.
+  - Otherwise it returns ranked insights, 10 per page, with pagination metadata. `GET /prompts/{responseId}/insights?page=N` serves the rest of the same result.
+- **Web client** ([details](apps/web/README.md)):
+  - A prompt form with Zod validation; submit is disabled until the form is valid.
+  - A clarification notice that continues the conversation.
+  - Structured error alerts, with field errors mapped onto the form.
+  - Insight cards with "Load more" (an RTK Query infinite query whose page 1 is seeded from the POST), 300 ms debounced search over loaded insights, and title/content A–Z and Z–A sorting.
+- **API platform:**
   - Two health endpoints. `GET /health` is a liveness check that doesn't touch any dependency. `GET /health/ready` checks Postgres and Redis at the same time with a 2 s timeout and returns `503` if either is down.
   - Every response carries an `X-Request-ID` header, and every request is logged once with that id. Logs are readable text or JSON.
-  - Every error the API generates has the same shape: `{"error": {"code", "message", "request_id", "details"}}`.
+  - Every error the API generates has the same shape: `{"error": {"code", "message", "request_id", "details"}}`, with UPPER_SNAKE codes.
   - CORS is set from the env file.
-- **Database:** Alembic is wired to the app's settings and to a shared `Base` with constraint naming conventions. Autogenerate works. **There are no models or migrations yet.**
-- **Web:** one page (`/`) that calls the API on every request and shows the status of the api, database and redis. `/api/*` on the web app is proxied to the API.
+- **Database:** one migration creates `insights`, `conversations` and `prompt_responses`, and seeds 36 insights in 4 languages. Alembic is wired to the app's settings and to a shared `Base` with constraint naming conventions.
 - **Tests:**
-  - API unit tests.
-  - API tests against a real, migrated Postgres test database, rolled back after each test.
-  - Web unit tests (Vitest + Testing Library).
-  - End-to-end tests (Playwright) across the whole stack.
+  - 83 API tests, many against a real, migrated and seeded Postgres test database, rolled back after each test.
+  - 47 web unit and component tests (Vitest + Testing Library).
+  - 11 end-to-end tests (Playwright) across the whole stack.
 - **Tooling:** Docker images for both apps, pre-commit hooks, and GitHub Actions CI.
 
-Not included yet: auth, users, or any domain models. `bcrypt` and `uuid6` are installed in the API but not used yet.
+Not included: auth and users (`bcrypt` is installed but unused), and real LLM calls.
 
 ## Prerequisites
 
@@ -56,7 +68,16 @@ yarn dev:api     # http://localhost:8000  (API docs at /docs)
 yarn dev:web     # http://localhost:3000
 ```
 
-Open http://localhost:3000. You should see `api`, `database` and `redis` all marked **ok**.
+Open http://localhost:3000 and try:
+
+| Prompt | Language | What happens |
+| --- | --- | --- |
+| `How is AI changing healthcare?` | English | 20 insights: 10 shown, "Load more" for the rest |
+| `AI`, then `in healthcare` | English | Clarification first, then results for the combined prompt |
+| `tell me more`, then `about climate and energy` | English | Clarification, then climate insights |
+| `¿Cómo está cambiando la IA la salud?` | Spanish | Spanish insights |
+| `better sleep routine` | English | 8 insights, a single page |
+| `penguin migration patterns` | English | No matches (empty state) |
 
 Optional:
 - Install the git hooks: `cd apps/api && poetry run pre-commit install`
@@ -110,7 +131,7 @@ Run these from the repo root.
 
 | Layer | Where | Needs |
 | --- | --- | --- |
-| API unit and route tests | `apps/api/tests/{core,routers,services}` | Nothing. Datastores are stubbed or use `fakeredis` |
+| API unit and route tests | `apps/api/tests/{core,routers,services}` | Nothing, except `routers/test_prompts.py`, which needs Postgres |
 | API database tests | `apps/api/tests/db`, or any test using `db_session` / `db_client` | Postgres running (`yarn infra:up`) |
 | Web unit tests | `apps/web/src/**/*.test.{ts,tsx}` | Nothing |
 | End-to-end tests | `apps/web/e2e/*.spec.ts` | Postgres + Redis up and migrated, Playwright's Chromium installed |

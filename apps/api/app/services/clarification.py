@@ -18,10 +18,13 @@ _FILLER_WORDS = frozenset(
         hey ok okay thanks
         el la los las un una y o de del en con por para sobre que como cual es son
         me mi yo tu dime dame explica ayuda mas informacion algo cosas hola gracias
+        esta estan hay ser fue
         le les une des et ou du au aux avec pour sur est sont moi je tu dis donne
         explique aide plus quelque chose choses bonjour merci quoi comment pourquoi
+        c ce ces fait etre
         der die das ein eine und oder von zu im mit fur uber ist sind mir ich du
         sag gib erklare hilfe mehr etwas dinge hallo danke was wie warum
+        wird werden hat haben
         """
     )
 )
