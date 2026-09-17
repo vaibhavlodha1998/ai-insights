@@ -1,0 +1,397 @@
+{
+  "_comment": "Dummy AI output seeded by the create_insights_and_conversations migration. Illustrative sample content only; not real research. Frozen: add a new seed file and migration for changes.",
+  "topics": {
+    "technology": [
+      "technology", "technolog", "tech", "ai", "artificial", "intelligence", "machine", "learning", "software", "digital", "data", "cloud", "cyber", "security", "automation", "computing", "code", "developer", "programming",
+      "tecnologia", "inteligencia", "aprendizaje", "datos", "nube", "seguridad", "programacion", "ia",
+      "technologie", "intelligence", "artificielle", "donnees", "numerique", "logiciel", "securite", "informatique",
+      "technik", "kunstliche", "intelligenz", "ki", "daten", "sicherheit", "automatisierung", "programmierung"
+    ],
+    "health": [
+      "health", "healthcare", "medical", "medicine", "hospital", "patient", "wellness", "wellbeing", "diagnos", "clinic", "doctor", "fitness", "sleep", "nutrition", "diet", "mental", "exercise",
+      "salud", "medic", "paciente", "bienestar", "sueno", "nutricion", "dieta", "ejercicio",
+      "sante", "medecin", "hopital", "sommeil", "alimentation", "sport", "bien",
+      "gesundheit", "medizin", "krankenhaus", "arzt", "schlaf", "ernahrung", "bewegung"
+    ],
+    "finance": [
+      "finance", "financ", "money", "invest", "bank", "market", "budget", "saving", "savings", "economy", "econom", "payment", "loan", "debt", "retirement",
+      "dinero", "inversion", "invertir", "banco", "ahorro", "ahorrar", "pago", "presupuesto", "deuda",
+      "argent", "banque", "epargne", "marche", "paiement", "credit", "dette",
+      "geld", "sparen", "wirtschaft", "finanz", "zahlung", "kredit", "schulden", "zinsen"
+    ],
+    "climate": [
+      "climate", "carbon", "emission", "renewable", "energy", "solar", "wind", "sustainab", "environment", "warming", "green", "heating",
+      "clima", "carbono", "emisiones", "renovable", "energia", "sostenib", "ambiente", "calefaccion",
+      "climat", "carbone", "renouvelable", "energie", "durable", "environnement", "chauffage",
+      "klima", "kohlenstoff", "emissionen", "erneuerbar", "nachhaltig", "umwelt", "heizung"
+    ],
+    "travel": [
+      "travel", "trip", "tourism", "touris", "flight", "hotel", "vacation", "holiday", "destination", "rail", "railway",
+      "viaje", "viajar", "turismo", "vuelo", "vacaciones", "destino", "tren",
+      "voyage", "voyager", "vacances", "avion", "sejour",
+      "reise", "reisen", "urlaub", "flug", "bahn", "zug", "tourismus"
+    ]
+  },
+  "insights": [
+    {
+      "key": "tech-ai-diagnostics", "category": "technology", "source": "Research summary", "confidence": 0.91,
+      "tags": ["ai", "healthcare", "diagnostics"],
+      "translations": {
+        "en": {"title": "AI-assisted diagnostics are moving into clinics", "content": "Image-analysis models increasingly help clinicians flag anomalies in scans, shortening the time to a first review while keeping a doctor in the loop."},
+        "es": {"title": "Los diagnósticos asistidos por IA llegan a las clínicas", "content": "Los modelos de análisis de imágenes ayudan cada vez más a los médicos a detectar anomalías en las exploraciones, acortando el tiempo hasta la primera revisión sin sacar al médico del proceso."},
+        "fr": {"title": "Le diagnostic assisté par l'IA arrive dans les cliniques", "content": "Les modèles d'analyse d'images aident de plus en plus les cliniciens à repérer des anomalies dans les examens, réduisant le délai avant une première lecture tout en gardant le médecin décisionnaire."},
+        "de": {"title": "KI-gestützte Diagnostik hält Einzug in Kliniken", "content": "Bildanalysemodelle helfen Ärztinnen und Ärzten zunehmend, Auffälligkeiten in Aufnahmen zu markieren, und verkürzen so die Zeit bis zur ersten Befundung, ohne den Menschen aus der Entscheidung zu nehmen."}
+      }
+    },
+    {
+      "key": "tech-genai-productivity", "category": "technology", "source": "Industry analysis", "confidence": 0.88,
+      "tags": ["ai", "productivity", "work"],
+      "translations": {
+        "en": {"title": "Generative AI is reshaping knowledge work", "content": "Teams use text and code assistants to draft, summarize and review work, shifting effort from first drafts to editing and verification."},
+        "es": {"title": "La IA generativa está transformando el trabajo intelectual", "content": "Los equipos usan asistentes de texto y código para redactar, resumir y revisar, desplazando el esfuerzo de los primeros borradores a la edición y la verificación."},
+        "fr": {"title": "L'IA générative transforme le travail intellectuel", "content": "Les équipes utilisent des assistants de texte et de code pour rédiger, résumer et relire, ce qui déplace l'effort des premiers jets vers la révision et la vérification."},
+        "de": {"title": "Generative KI verändert die Wissensarbeit", "content": "Teams nutzen Text- und Code-Assistenten zum Entwerfen, Zusammenfassen und Prüfen und verlagern den Aufwand vom ersten Entwurf hin zu Überarbeitung und Kontrolle."}
+      }
+    },
+    {
+      "key": "tech-edge-computing", "category": "technology", "source": "Industry analysis", "confidence": 0.84,
+      "tags": ["edge", "iot", "latency"],
+      "translations": {
+        "en": {"title": "Edge computing brings processing closer to devices", "content": "Running workloads near sensors and users reduces latency and bandwidth costs for applications like factory monitoring and connected vehicles."},
+        "es": {"title": "El edge computing acerca el procesamiento a los dispositivos", "content": "Ejecutar cargas de trabajo cerca de los sensores y usuarios reduce la latencia y el coste de ancho de banda en aplicaciones como la supervisión de fábricas y los vehículos conectados."},
+        "fr": {"title": "L'edge computing rapproche le calcul des appareils", "content": "Exécuter les traitements près des capteurs et des utilisateurs réduit la latence et les coûts de bande passante pour des usages comme la surveillance d'usines et les véhicules connectés."},
+        "de": {"title": "Edge Computing verlagert Rechenleistung zu den Geräten", "content": "Wer Workloads nahe an Sensoren und Nutzern ausführt, senkt Latenz und Bandbreitenkosten, etwa bei der Fabriküberwachung oder vernetzten Fahrzeugen."}
+      }
+    },
+    {
+      "key": "tech-cloud-costs", "category": "technology", "source": "Expert survey", "confidence": 0.82,
+      "tags": ["cloud", "costs", "finops"],
+      "translations": {
+        "en": {"title": "Cloud cost management becomes a core discipline", "content": "As cloud usage grows, organizations adopt tagging, budgets and rightsizing practices to keep spending tied to actual business value."},
+        "es": {"title": "La gestión de costes en la nube se vuelve una disciplina clave", "content": "A medida que crece el uso de la nube, las organizaciones adoptan etiquetado, presupuestos y ajuste de recursos para vincular el gasto al valor real del negocio."},
+        "fr": {"title": "La maîtrise des coûts du cloud devient une discipline clé", "content": "Avec la croissance du cloud, les organisations adoptent l'étiquetage, les budgets et le dimensionnement adapté pour lier les dépenses à la valeur réelle."},
+        "de": {"title": "Cloud-Kostenmanagement wird zur Kerndisziplin", "content": "Mit wachsender Cloud-Nutzung setzen Unternehmen auf Tagging, Budgets und passende Dimensionierung, damit Ausgaben am tatsächlichen Geschäftsnutzen ausgerichtet bleiben."}
+      }
+    },
+    {
+      "key": "tech-zero-trust", "category": "technology", "source": "Expert survey", "confidence": 0.89,
+      "tags": ["cybersecurity", "zero-trust", "security"],
+      "translations": {
+        "en": {"title": "Zero-trust security replaces the network perimeter", "content": "Instead of trusting everything inside a network, zero-trust designs verify every user, device and request, limiting the damage from a single breach."},
+        "es": {"title": "La seguridad zero trust sustituye al perímetro de red", "content": "En lugar de confiar en todo lo que está dentro de la red, los diseños zero trust verifican cada usuario, dispositivo y solicitud, limitando el daño de una sola brecha."},
+        "fr": {"title": "La sécurité zero trust remplace le périmètre réseau", "content": "Plutôt que de faire confiance à tout ce qui est dans le réseau, le zero trust vérifie chaque utilisateur, appareil et requête, ce qui limite les dégâts d'une intrusion."},
+        "de": {"title": "Zero Trust ersetzt den klassischen Netzwerkperimeter", "content": "Statt allem im Netzwerk zu vertrauen, prüft Zero Trust jeden Nutzer, jedes Gerät und jede Anfrage und begrenzt so den Schaden eines einzelnen Einbruchs."}
+      }
+    },
+    {
+      "key": "tech-passkeys", "category": "technology", "source": "Research summary", "confidence": 0.86,
+      "tags": ["passkeys", "authentication", "security"],
+      "translations": {
+        "en": {"title": "Passkeys are reducing reliance on passwords", "content": "Passkeys use device-bound cryptographic keys, which resist phishing and remove the need for users to remember or reuse passwords."},
+        "es": {"title": "Las passkeys reducen la dependencia de las contraseñas", "content": "Las passkeys usan claves criptográficas ligadas al dispositivo, resisten el phishing y evitan que los usuarios tengan que recordar o reutilizar contraseñas."},
+        "fr": {"title": "Les passkeys réduisent la dépendance aux mots de passe", "content": "Les passkeys reposent sur des clés cryptographiques liées à l'appareil : elles résistent à l'hameçonnage et évitent de retenir ou réutiliser des mots de passe."},
+        "de": {"title": "Passkeys machen Passwörter zunehmend überflüssig", "content": "Passkeys nutzen gerätegebundene kryptografische Schlüssel, sind resistent gegen Phishing und ersparen das Merken oder Wiederverwenden von Passwörtern."}
+      }
+    },
+    {
+      "key": "tech-low-code", "category": "technology", "source": "Industry analysis", "confidence": 0.78,
+      "tags": ["low-code", "automation", "software"],
+      "translations": {
+        "en": {"title": "Low-code tools widen who can build software", "content": "Visual builders let non-developers automate workflows, while engineering teams focus on integration, governance and complex features."},
+        "es": {"title": "Las herramientas low-code amplían quién puede crear software", "content": "Los constructores visuales permiten a no desarrolladores automatizar flujos de trabajo, mientras los equipos de ingeniería se centran en integración, gobierno y funciones complejas."},
+        "fr": {"title": "Le low-code élargit le cercle de ceux qui créent des logiciels", "content": "Les outils visuels permettent aux non-développeurs d'automatiser des processus, tandis que les équipes techniques se concentrent sur l'intégration, la gouvernance et les fonctions complexes."},
+        "de": {"title": "Low-Code erweitert den Kreis der Softwareentwickler", "content": "Visuelle Baukästen ermöglichen es Fachanwendern, Abläufe zu automatisieren, während sich Entwicklungsteams auf Integration, Governance und komplexe Funktionen konzentrieren."}
+      }
+    },
+    {
+      "key": "tech-open-models", "category": "technology", "source": "Research summary", "confidence": 0.8,
+      "tags": ["ai", "open-source", "models"],
+      "translations": {
+        "en": {"title": "Open-weight AI models gain adoption", "content": "Openly available models let companies run AI on their own infrastructure, trading some convenience for control over data and costs."},
+        "es": {"title": "Los modelos de IA con pesos abiertos ganan adopción", "content": "Los modelos disponibles abiertamente permiten a las empresas ejecutar IA en su propia infraestructura, cambiando algo de comodidad por control sobre los datos y los costes."},
+        "fr": {"title": "Les modèles d'IA à poids ouverts gagnent du terrain", "content": "Les modèles librement disponibles permettent aux entreprises de faire tourner l'IA sur leur propre infrastructure, au prix d'un peu de confort mais avec plus de contrôle sur les données et les coûts."},
+        "de": {"title": "KI-Modelle mit offenen Gewichten setzen sich durch", "content": "Frei verfügbare Modelle erlauben es Unternehmen, KI auf eigener Infrastruktur zu betreiben – etwas weniger Komfort, dafür mehr Kontrolle über Daten und Kosten."}
+      }
+    },
+    {
+      "key": "tech-quantum", "category": "technology", "source": "Expert panel", "confidence": 0.72,
+      "tags": ["quantum", "research", "computing"],
+      "translations": {
+        "en": {"title": "Quantum computing remains early but promising", "content": "Current quantum machines are still error-prone, yet research progress keeps attention on future uses in chemistry, materials and optimization."},
+        "es": {"title": "La computación cuántica sigue en fase temprana pero prometedora", "content": "Las máquinas cuánticas actuales aún cometen muchos errores, pero los avances en investigación mantienen el interés en futuros usos en química, materiales y optimización."},
+        "fr": {"title": "L'informatique quantique reste naissante mais prometteuse", "content": "Les machines quantiques actuelles sont encore sujettes aux erreurs, mais les progrès de la recherche entretiennent l'intérêt pour la chimie, les matériaux et l'optimisation."},
+        "de": {"title": "Quantencomputing bleibt jung, aber vielversprechend", "content": "Heutige Quantenrechner sind noch fehleranfällig, doch Forschungsfortschritte halten das Interesse an künftigen Anwendungen in Chemie, Materialforschung und Optimierung wach."}
+      }
+    },
+    {
+      "key": "tech-data-governance", "category": "technology", "source": "Expert survey", "confidence": 0.83,
+      "tags": ["data", "governance", "ai"],
+      "translations": {
+        "en": {"title": "Data governance underpins trustworthy AI", "content": "Clear ownership, lineage and access rules make it easier to explain where AI training data came from and how it may be used."},
+        "es": {"title": "El gobierno de datos es la base de una IA confiable", "content": "Reglas claras de propiedad, trazabilidad y acceso facilitan explicar de dónde provienen los datos de entrenamiento de la IA y cómo pueden usarse."},
+        "fr": {"title": "La gouvernance des données fonde une IA digne de confiance", "content": "Des règles claires de propriété, de traçabilité et d'accès permettent d'expliquer d'où viennent les données d'entraînement de l'IA et comment les utiliser."},
+        "de": {"title": "Data Governance ist die Grundlage vertrauenswürdiger KI", "content": "Klare Regeln zu Verantwortung, Herkunft und Zugriff machen nachvollziehbar, woher KI-Trainingsdaten stammen und wie sie genutzt werden dürfen."}
+      }
+    },
+    {
+      "key": "tech-ai-regulation", "category": "technology", "source": "Policy overview", "confidence": 0.85,
+      "tags": ["ai", "regulation", "policy"],
+      "translations": {
+        "en": {"title": "AI regulation is taking shape worldwide", "content": "Governments are introducing risk-based rules for AI systems, pushing companies to document models, assess impact and keep humans accountable."},
+        "es": {"title": "La regulación de la IA toma forma en todo el mundo", "content": "Los gobiernos introducen normas basadas en el riesgo para los sistemas de IA, lo que lleva a las empresas a documentar modelos, evaluar su impacto y mantener la responsabilidad humana."},
+        "fr": {"title": "La régulation de l'IA prend forme dans le monde", "content": "Les gouvernements adoptent des règles fondées sur le risque pour les systèmes d'IA, poussant les entreprises à documenter leurs modèles, évaluer leur impact et garder l'humain responsable."},
+        "de": {"title": "KI-Regulierung nimmt weltweit Gestalt an", "content": "Regierungen führen risikobasierte Regeln für KI-Systeme ein und verpflichten Unternehmen, Modelle zu dokumentieren, Auswirkungen zu bewerten und Menschen in der Verantwortung zu halten."}
+      }
+    },
+    {
+      "key": "tech-ai-code-review", "category": "technology", "source": "Industry analysis", "confidence": 0.79,
+      "tags": ["ai", "developer", "code-review"],
+      "translations": {
+        "en": {"title": "AI code review assists development teams", "content": "Automated reviewers catch common bugs and style issues early, but teams still rely on human review for design decisions and security."},
+        "es": {"title": "La revisión de código con IA ayuda a los equipos de desarrollo", "content": "Los revisores automáticos detectan pronto errores comunes y problemas de estilo, pero los equipos siguen confiando en la revisión humana para el diseño y la seguridad."},
+        "fr": {"title": "La revue de code par l'IA épaule les équipes de développement", "content": "Les relecteurs automatiques repèrent tôt les bugs courants et les problèmes de style, mais les équipes comptent toujours sur la relecture humaine pour la conception et la sécurité."},
+        "de": {"title": "KI-Code-Reviews unterstützen Entwicklungsteams", "content": "Automatische Reviewer finden häufige Fehler und Stilprobleme früh, doch bei Architekturentscheidungen und Sicherheit bleiben menschliche Reviews unverzichtbar."}
+      }
+    },
+    {
+      "key": "health-telemedicine", "category": "health", "source": "Public health guidance", "confidence": 0.87,
+      "tags": ["telemedicine", "care", "digital"],
+      "translations": {
+        "en": {"title": "Telemedicine is now a routine care option", "content": "Video and chat consultations handle follow-ups and minor issues conveniently, while in-person visits remain essential for examinations."},
+        "es": {"title": "La telemedicina ya es una opción habitual de atención", "content": "Las consultas por vídeo y chat resuelven con comodidad seguimientos y problemas leves, mientras las visitas presenciales siguen siendo esenciales para las exploraciones."},
+        "fr": {"title": "La télémédecine est devenue une option de soins courante", "content": "Les consultations par vidéo ou messagerie gèrent facilement les suivis et les problèmes bénins, tandis que les visites en personne restent indispensables pour les examens."},
+        "de": {"title": "Telemedizin ist zur regulären Versorgungsoption geworden", "content": "Video- und Chat-Sprechstunden decken Nachsorge und kleinere Beschwerden bequem ab, für Untersuchungen bleiben Termine vor Ort unverzichtbar."}
+      }
+    },
+    {
+      "key": "health-wearables", "category": "health", "source": "Research summary", "confidence": 0.81,
+      "tags": ["wearables", "tracking", "prevention"],
+      "translations": {
+        "en": {"title": "Wearables support everyday health tracking", "content": "Watches and rings track heart rate, activity and sleep trends, helping people notice changes worth discussing with a professional."},
+        "es": {"title": "Los wearables facilitan el seguimiento diario de la salud", "content": "Relojes y anillos registran la frecuencia cardiaca, la actividad y el sueño, ayudando a detectar cambios que conviene comentar con un profesional."},
+        "fr": {"title": "Les objets connectés facilitent le suivi quotidien de la santé", "content": "Montres et bagues suivent le rythme cardiaque, l'activité et le sommeil, ce qui aide à repérer des changements à évoquer avec un professionnel."},
+        "de": {"title": "Wearables unterstützen die tägliche Gesundheitsbeobachtung", "content": "Uhren und Ringe erfassen Herzfrequenz, Aktivität und Schlaf und helfen, Veränderungen zu bemerken, die man mit Fachleuten besprechen sollte."}
+      }
+    },
+    {
+      "key": "health-sleep", "category": "health", "source": "Public health guidance", "confidence": 0.9,
+      "tags": ["sleep", "routine", "wellbeing"],
+      "translations": {
+        "en": {"title": "Consistent sleep matters as much as duration", "content": "Regular bed and wake times support energy, mood and concentration, even when total sleep hours stay the same."},
+        "es": {"title": "Dormir con regularidad importa tanto como dormir suficiente", "content": "Acostarse y levantarse a horas regulares favorece la energía, el ánimo y la concentración, incluso con las mismas horas totales de sueño."},
+        "fr": {"title": "La régularité du sommeil compte autant que sa durée", "content": "Des horaires de coucher et de lever réguliers soutiennent l'énergie, l'humeur et la concentration, même à durée de sommeil égale."},
+        "de": {"title": "Regelmäßiger Schlaf ist so wichtig wie seine Dauer", "content": "Feste Schlafens- und Aufstehzeiten fördern Energie, Stimmung und Konzentration, auch wenn die Gesamtschlafdauer gleich bleibt."}
+      }
+    },
+    {
+      "key": "health-mental-health-apps", "category": "health", "source": "Expert panel", "confidence": 0.77,
+      "tags": ["mental-health", "apps", "therapy"],
+      "translations": {
+        "en": {"title": "Digital tools expand access to mental health support", "content": "Guided exercises and online therapy lower barriers to getting help, though they work best alongside professional care when needed."},
+        "es": {"title": "Las herramientas digitales amplían el acceso a la salud mental", "content": "Los ejercicios guiados y la terapia en línea reducen las barreras para pedir ayuda, aunque funcionan mejor junto a la atención profesional cuando hace falta."},
+        "fr": {"title": "Les outils numériques élargissent l'accès au soutien psychologique", "content": "Exercices guidés et thérapie en ligne abaissent les obstacles pour demander de l'aide, mais fonctionnent mieux en complément d'un suivi professionnel si nécessaire."},
+        "de": {"title": "Digitale Angebote erleichtern den Zugang zu psychischer Unterstützung", "content": "Angeleitete Übungen und Online-Therapie senken die Hürden, Hilfe zu suchen, wirken aber am besten ergänzend zu professioneller Behandlung."}
+      }
+    },
+    {
+      "key": "health-preventive-care", "category": "health", "source": "Public health guidance", "confidence": 0.88,
+      "tags": ["prevention", "screening", "checkups"],
+      "translations": {
+        "en": {"title": "Preventive care shifts focus to early detection", "content": "Regular screenings and check-ups catch many conditions earlier, when treatment is usually simpler and more effective."},
+        "es": {"title": "La medicina preventiva se centra en la detección temprana", "content": "Los cribados y revisiones periódicas detectan antes muchas afecciones, cuando el tratamiento suele ser más sencillo y eficaz."},
+        "fr": {"title": "La prévention mise sur le dépistage précoce", "content": "Les dépistages et bilans réguliers détectent plus tôt de nombreuses affections, lorsque le traitement est généralement plus simple et plus efficace."},
+        "de": {"title": "Vorsorge setzt auf Früherkennung", "content": "Regelmäßige Vorsorgeuntersuchungen erkennen viele Erkrankungen früher, wenn die Behandlung meist einfacher und wirksamer ist."}
+      }
+    },
+    {
+      "key": "health-nutrition", "category": "health", "source": "Research summary", "confidence": 0.86,
+      "tags": ["nutrition", "diet", "food"],
+      "translations": {
+        "en": {"title": "Whole foods remain the foundation of a healthy diet", "content": "Diets rich in vegetables, legumes and whole grains are consistently linked to better long-term health than restrictive trends."},
+        "es": {"title": "Los alimentos integrales siguen siendo la base de una dieta sana", "content": "Las dietas ricas en verduras, legumbres y cereales integrales se asocian de forma constante con mejor salud a largo plazo que las modas restrictivas."},
+        "fr": {"title": "Les aliments peu transformés restent la base d'une alimentation saine", "content": "Les régimes riches en légumes, légumineuses et céréales complètes sont régulièrement associés à une meilleure santé à long terme que les tendances restrictives."},
+        "de": {"title": "Unverarbeitete Lebensmittel bleiben die Basis gesunder Ernährung", "content": "Eine Ernährung mit viel Gemüse, Hülsenfrüchten und Vollkorn wird durchweg mit besserer langfristiger Gesundheit verbunden als restriktive Trends."}
+      }
+    },
+    {
+      "key": "health-active-breaks", "category": "health", "source": "Public health guidance", "confidence": 0.84,
+      "tags": ["exercise", "work", "posture"],
+      "translations": {
+        "en": {"title": "Short activity breaks offset long sitting", "content": "Standing up, stretching or walking for a few minutes every hour helps circulation and reduces stiffness during desk work."},
+        "es": {"title": "Las pausas activas compensan estar sentado mucho tiempo", "content": "Levantarse, estirarse o caminar unos minutos cada hora mejora la circulación y reduce la rigidez durante el trabajo de oficina."},
+        "fr": {"title": "De courtes pauses actives compensent la position assise", "content": "Se lever, s'étirer ou marcher quelques minutes chaque heure favorise la circulation et réduit les raideurs lors du travail de bureau."},
+        "de": {"title": "Kurze Bewegungspausen gleichen langes Sitzen aus", "content": "Jede Stunde ein paar Minuten aufstehen, dehnen oder gehen fördert die Durchblutung und beugt Verspannungen bei der Schreibtischarbeit vor."}
+      }
+    },
+    {
+      "key": "health-personalized-medicine", "category": "health", "source": "Research summary", "confidence": 0.76,
+      "tags": ["genomics", "treatment", "medicine"],
+      "translations": {
+        "en": {"title": "Personalized medicine tailors treatment to the patient", "content": "Genetic and clinical data help doctors choose therapies that are more likely to work for a specific person, reducing trial and error."},
+        "es": {"title": "La medicina personalizada adapta el tratamiento al paciente", "content": "Los datos genéticos y clínicos ayudan a elegir terapias con más probabilidad de funcionar para cada persona, reduciendo el ensayo y error."},
+        "fr": {"title": "La médecine personnalisée adapte le traitement au patient", "content": "Les données génétiques et cliniques aident les médecins à choisir les thérapies les plus susceptibles de fonctionner pour chaque personne, en limitant les tâtonnements."},
+        "de": {"title": "Personalisierte Medizin passt die Behandlung an den Patienten an", "content": "Genetische und klinische Daten helfen, Therapien zu wählen, die bei einer bestimmten Person eher wirken, und verringern so das Ausprobieren."}
+      }
+    },
+    {
+      "key": "finance-emergency-fund", "category": "finance", "source": "Financial education", "confidence": 0.93,
+      "tags": ["savings", "planning", "risk"],
+      "translations": {
+        "en": {"title": "An emergency fund comes before investing", "content": "Keeping several months of essential expenses in accessible savings protects against job loss or surprise bills without selling investments."},
+        "es": {"title": "Un fondo de emergencia va antes que invertir", "content": "Tener varios meses de gastos esenciales en ahorros accesibles protege ante la pérdida de empleo o facturas imprevistas sin vender inversiones."},
+        "fr": {"title": "Une épargne de précaution passe avant l'investissement", "content": "Garder plusieurs mois de dépenses essentielles en épargne disponible protège contre une perte d'emploi ou une facture imprévue sans devoir vendre ses placements."},
+        "de": {"title": "Ein Notgroschen kommt vor dem Investieren", "content": "Mehrere Monatsausgaben als verfügbares Erspartes schützen bei Jobverlust oder unerwarteten Rechnungen, ohne Anlagen verkaufen zu müssen."}
+      }
+    },
+    {
+      "key": "finance-diversification", "category": "finance", "source": "Financial education", "confidence": 0.9,
+      "tags": ["investing", "risk", "portfolio"],
+      "translations": {
+        "en": {"title": "Diversification reduces investment risk", "content": "Spreading money across asset types, sectors and regions limits the impact any single investment can have on the whole portfolio."},
+        "es": {"title": "Diversificar reduce el riesgo de inversión", "content": "Repartir el dinero entre tipos de activos, sectores y regiones limita el impacto que una sola inversión puede tener en toda la cartera."},
+        "fr": {"title": "La diversification réduit le risque d'investissement", "content": "Répartir son argent entre classes d'actifs, secteurs et régions limite l'impact qu'un seul placement peut avoir sur l'ensemble du portefeuille."},
+        "de": {"title": "Streuung senkt das Anlagerisiko", "content": "Wer Geld auf Anlageklassen, Branchen und Regionen verteilt, begrenzt den Einfluss einer einzelnen Anlage auf das gesamte Portfolio."}
+      }
+    },
+    {
+      "key": "finance-fees", "category": "finance", "source": "Market analysis", "confidence": 0.87,
+      "tags": ["fees", "investing", "costs"],
+      "translations": {
+        "en": {"title": "Low fees compound into meaningful savings", "content": "Small differences in fund and account fees add up over decades, so comparing costs is one of the simplest ways to improve returns."},
+        "es": {"title": "Las comisiones bajas se convierten en un ahorro importante", "content": "Pequeñas diferencias en comisiones de fondos y cuentas se acumulan durante décadas, por lo que comparar costes es una de las formas más sencillas de mejorar la rentabilidad."},
+        "fr": {"title": "Des frais réduits deviennent une économie significative", "content": "De petites différences de frais sur les fonds et les comptes s'accumulent sur des décennies : comparer les coûts est l'un des moyens les plus simples d'améliorer le rendement."},
+        "de": {"title": "Niedrige Gebühren summieren sich zu spürbaren Ersparnissen", "content": "Kleine Unterschiede bei Fonds- und Kontogebühren summieren sich über Jahrzehnte, daher ist der Kostenvergleich einer der einfachsten Wege zu mehr Rendite."}
+      }
+    },
+    {
+      "key": "finance-digital-payments", "category": "finance", "source": "Market analysis", "confidence": 0.8,
+      "tags": ["payments", "fintech", "digital"],
+      "translations": {
+        "en": {"title": "Digital payments keep replacing cash", "content": "Mobile wallets and instant transfers make payments faster, while raising new questions about fraud protection and financial inclusion."},
+        "es": {"title": "Los pagos digitales siguen sustituyendo al efectivo", "content": "Las billeteras móviles y las transferencias instantáneas agilizan los pagos, a la vez que plantean nuevas preguntas sobre protección contra el fraude e inclusión financiera."},
+        "fr": {"title": "Les paiements numériques continuent de remplacer les espèces", "content": "Portefeuilles mobiles et virements instantanés accélèrent les paiements, tout en soulevant de nouvelles questions de protection contre la fraude et d'inclusion financière."},
+        "de": {"title": "Digitale Zahlungen verdrängen weiter das Bargeld", "content": "Mobile Wallets und Echtzeitüberweisungen beschleunigen das Bezahlen und werfen zugleich neue Fragen zu Betrugsschutz und finanzieller Teilhabe auf."}
+      }
+    },
+    {
+      "key": "finance-automated-budgeting", "category": "finance", "source": "Financial education", "confidence": 0.85,
+      "tags": ["budgeting", "savings", "habits"],
+      "translations": {
+        "en": {"title": "Automated budgeting makes saving easier", "content": "Scheduling transfers to savings right after payday turns saving into a default rather than a monthly decision."},
+        "es": {"title": "Automatizar el presupuesto facilita el ahorro", "content": "Programar transferencias al ahorro justo después de cobrar convierte el ahorro en algo automático en lugar de una decisión mensual."},
+        "fr": {"title": "Automatiser son budget facilite l'épargne", "content": "Programmer un virement vers l'épargne juste après le salaire fait de l'épargne un réflexe par défaut plutôt qu'une décision chaque mois."},
+        "de": {"title": "Automatisches Budgetieren erleichtert das Sparen", "content": "Wer Sparüberweisungen direkt nach dem Gehaltseingang einplant, macht Sparen zur Voreinstellung statt zur monatlichen Entscheidung."}
+      }
+    },
+    {
+      "key": "finance-interest-rates", "category": "finance", "source": "Market analysis", "confidence": 0.82,
+      "tags": ["interest", "loans", "savings"],
+      "translations": {
+        "en": {"title": "Interest rates shape borrowing and saving decisions", "content": "Higher rates make loans more expensive and savings more rewarding, so it helps to review debts and deposits when rates change."},
+        "es": {"title": "Los tipos de interés condicionan pedir prestado y ahorrar", "content": "Los tipos altos encarecen los préstamos y hacen más rentable el ahorro, así que conviene revisar deudas y depósitos cuando cambian."},
+        "fr": {"title": "Les taux d'intérêt orientent emprunt et épargne", "content": "Des taux élevés renchérissent le crédit et rendent l'épargne plus rémunératrice : mieux vaut revoir dettes et placements lorsque les taux évoluent."},
+        "de": {"title": "Zinsen prägen Entscheidungen über Kredite und Sparen", "content": "Höhere Zinsen verteuern Kredite und machen Sparen attraktiver, daher lohnt es sich, Schulden und Einlagen bei Zinsänderungen zu prüfen."}
+      }
+    },
+    {
+      "key": "climate-renewables", "category": "climate", "source": "Energy outlook", "confidence": 0.9,
+      "tags": ["renewables", "solar", "wind"],
+      "translations": {
+        "en": {"title": "Renewables lead new power capacity", "content": "Solar and wind installations continue to grow as costs fall, making clean electricity the default choice for much new generation."},
+        "es": {"title": "Las renovables lideran la nueva capacidad eléctrica", "content": "Las instalaciones solares y eólicas siguen creciendo a medida que bajan los costes, convirtiendo la electricidad limpia en la opción por defecto para gran parte de la nueva generación."},
+        "fr": {"title": "Les renouvelables dominent les nouvelles capacités électriques", "content": "Le solaire et l'éolien continuent de croître à mesure que les coûts baissent, faisant de l'électricité propre le choix par défaut pour une grande partie des nouvelles capacités."},
+        "de": {"title": "Erneuerbare dominieren den Kraftwerkszubau", "content": "Solar- und Windanlagen wachsen weiter, da die Kosten sinken, und machen sauberen Strom zur Standardwahl für einen Großteil der neuen Erzeugung."}
+      }
+    },
+    {
+      "key": "climate-storage", "category": "climate", "source": "Energy outlook", "confidence": 0.84,
+      "tags": ["batteries", "grid", "storage"],
+      "translations": {
+        "en": {"title": "Energy storage stabilizes renewable grids", "content": "Batteries and other storage smooth out the variability of solar and wind, shifting clean power to when it is needed most."},
+        "es": {"title": "El almacenamiento de energía estabiliza las redes renovables", "content": "Las baterías y otros sistemas de almacenamiento suavizan la variabilidad solar y eólica, desplazando la energía limpia a cuando más se necesita."},
+        "fr": {"title": "Le stockage d'énergie stabilise les réseaux renouvelables", "content": "Batteries et autres moyens de stockage lissent la variabilité du solaire et de l'éolien, en décalant l'électricité propre vers les moments où elle est la plus utile."},
+        "de": {"title": "Energiespeicher stabilisieren erneuerbare Netze", "content": "Batterien und andere Speicher gleichen die Schwankungen von Sonne und Wind aus und verschieben sauberen Strom in die Zeiten mit dem größten Bedarf."}
+      }
+    },
+    {
+      "key": "climate-heat-pumps", "category": "climate", "source": "Research summary", "confidence": 0.86,
+      "tags": ["heat-pumps", "buildings", "efficiency"],
+      "translations": {
+        "en": {"title": "Heat pumps cut emissions from heating buildings", "content": "Heat pumps move heat instead of burning fuel, making them an efficient way to heat and cool homes with lower emissions."},
+        "es": {"title": "Las bombas de calor reducen las emisiones de la calefacción", "content": "Las bombas de calor trasladan calor en lugar de quemar combustible, lo que las convierte en una forma eficiente de calentar y refrescar viviendas con menos emisiones."},
+        "fr": {"title": "Les pompes à chaleur réduisent les émissions du chauffage", "content": "Les pompes à chaleur déplacent la chaleur au lieu de brûler du combustible : un moyen efficace de chauffer et rafraîchir les logements avec moins d'émissions."},
+        "de": {"title": "Wärmepumpen senken die Emissionen beim Heizen", "content": "Wärmepumpen transportieren Wärme, statt Brennstoff zu verbrennen, und heizen und kühlen Gebäude so effizient und emissionsärmer."}
+      }
+    },
+    {
+      "key": "climate-adaptation", "category": "climate", "source": "Policy overview", "confidence": 0.8,
+      "tags": ["adaptation", "cities", "resilience"],
+      "translations": {
+        "en": {"title": "Climate adaptation is becoming a planning priority", "content": "Cities are investing in flood defenses, shade and heat plans to protect people and infrastructure from more frequent extreme weather."},
+        "es": {"title": "La adaptación climática se convierte en prioridad de planificación", "content": "Las ciudades invierten en defensas contra inundaciones, sombra y planes de calor para proteger a las personas y las infraestructuras ante fenómenos extremos más frecuentes."},
+        "fr": {"title": "L'adaptation au climat devient une priorité d'aménagement", "content": "Les villes investissent dans la protection contre les inondations, l'ombrage et les plans canicule pour protéger habitants et infrastructures face à des extrêmes plus fréquents."},
+        "de": {"title": "Klimaanpassung wird zur Planungspriorität", "content": "Städte investieren in Hochwasserschutz, Verschattung und Hitzeaktionspläne, um Menschen und Infrastruktur vor häufigeren Wetterextremen zu schützen."}
+      }
+    },
+    {
+      "key": "climate-carbon-reporting", "category": "climate", "source": "Industry analysis", "confidence": 0.78,
+      "tags": ["carbon", "reporting", "business"],
+      "translations": {
+        "en": {"title": "Companies are measuring their carbon footprint", "content": "Emissions reporting helps organizations find the biggest sources of carbon in their operations and supply chains and set credible targets."},
+        "es": {"title": "Las empresas miden su huella de carbono", "content": "Informar sobre emisiones ayuda a las organizaciones a identificar sus mayores fuentes de carbono en operaciones y cadenas de suministro y a fijar objetivos creíbles."},
+        "fr": {"title": "Les entreprises mesurent leur empreinte carbone", "content": "Le reporting des émissions aide les organisations à identifier leurs principales sources de carbone, dans leurs opérations comme dans leur chaîne d'approvisionnement, et à fixer des objectifs crédibles."},
+        "de": {"title": "Unternehmen messen ihren CO2-Fußabdruck", "content": "Emissionsberichte helfen Organisationen, die größten CO2-Quellen in Betrieb und Lieferkette zu finden und glaubwürdige Ziele zu setzen."}
+      }
+    },
+    {
+      "key": "travel-shoulder-season", "category": "travel", "source": "Travel guide", "confidence": 0.83,
+      "tags": ["planning", "budget", "seasons"],
+      "translations": {
+        "en": {"title": "Shoulder-season travel offers better value", "content": "Visiting popular destinations just before or after peak season often means lower prices, fewer crowds and milder weather."},
+        "es": {"title": "Viajar en temporada media sale más rentable", "content": "Visitar destinos populares justo antes o después de la temporada alta suele significar precios más bajos, menos multitudes y un clima más suave."},
+        "fr": {"title": "Voyager en intersaison offre un meilleur rapport qualité-prix", "content": "Visiter des destinations prisées juste avant ou après la haute saison signifie souvent des prix plus bas, moins de monde et une météo plus douce."},
+        "de": {"title": "Reisen in der Nebensaison lohnt sich", "content": "Beliebte Ziele kurz vor oder nach der Hochsaison zu besuchen, bedeutet oft niedrigere Preise, weniger Andrang und milderes Wetter."}
+      }
+    },
+    {
+      "key": "travel-rail", "category": "travel", "source": "Travel guide", "confidence": 0.85,
+      "tags": ["rail", "transport", "emissions"],
+      "translations": {
+        "en": {"title": "Rail is a strong alternative for short trips", "content": "For many regional journeys, trains match flights on door-to-door time while producing far lower emissions."},
+        "es": {"title": "El tren es una gran alternativa para trayectos cortos", "content": "En muchos viajes regionales, el tren iguala al avión en tiempo puerta a puerta y genera muchas menos emisiones."},
+        "fr": {"title": "Le train est une vraie alternative pour les trajets courts", "content": "Sur de nombreux trajets régionaux, le train égale l'avion en temps de porte à porte tout en émettant beaucoup moins."},
+        "de": {"title": "Die Bahn ist eine starke Alternative für kurze Strecken", "content": "Auf vielen regionalen Verbindungen ist der Zug von Tür zu Tür so schnell wie das Flugzeug und verursacht deutlich weniger Emissionen."}
+      }
+    },
+    {
+      "key": "travel-remote-work", "category": "travel", "source": "Expert survey", "confidence": 0.74,
+      "tags": ["remote-work", "workation", "trends"],
+      "translations": {
+        "en": {"title": "Remote work is extending the length of trips", "content": "People who can work remotely increasingly combine work and leisure, staying longer in one place instead of taking short breaks."},
+        "es": {"title": "El teletrabajo alarga la duración de los viajes", "content": "Quienes pueden trabajar a distancia combinan cada vez más trabajo y ocio, quedándose más tiempo en un lugar en lugar de hacer escapadas cortas."},
+        "fr": {"title": "Le télétravail allonge la durée des séjours", "content": "Les personnes pouvant travailler à distance combinent de plus en plus travail et loisirs, en restant plus longtemps au même endroit plutôt que de multiplier les courtes escapades."},
+        "de": {"title": "Remote Work verlängert Reisen", "content": "Wer ortsunabhängig arbeiten kann, verbindet zunehmend Arbeit und Freizeit und bleibt länger an einem Ort, statt kurze Auszeiten zu nehmen."}
+      }
+    },
+    {
+      "key": "travel-sustainable-tourism", "category": "travel", "source": "Travel guide", "confidence": 0.79,
+      "tags": ["sustainability", "tourism", "local"],
+      "translations": {
+        "en": {"title": "Travelers look for more sustainable tourism options", "content": "Choosing local operators, longer stays and lower-impact transport helps spread tourism benefits and reduce environmental pressure."},
+        "es": {"title": "Los viajeros buscan opciones de turismo más sostenibles", "content": "Elegir operadores locales, estancias más largas y transporte de menor impacto ayuda a repartir los beneficios del turismo y reducir la presión ambiental."},
+        "fr": {"title": "Les voyageurs recherchent un tourisme plus durable", "content": "Choisir des prestataires locaux, des séjours plus longs et des transports moins polluants aide à mieux répartir les retombées du tourisme et à réduire la pression environnementale."},
+        "de": {"title": "Reisende suchen nachhaltigere Tourismusangebote", "content": "Lokale Anbieter, längere Aufenthalte und emissionsärmere Verkehrsmittel verteilen den Nutzen des Tourismus besser und entlasten die Umwelt."}
+      }
+    },
+    {
+      "key": "travel-digital-tools", "category": "travel", "source": "Travel guide", "confidence": 0.81,
+      "tags": ["apps", "planning", "digital"],
+      "translations": {
+        "en": {"title": "Digital tools simplify travel planning", "content": "Apps for booking, translation and navigation reduce friction abroad, though it is still wise to keep offline copies of key documents."},
+        "es": {"title": "Las herramientas digitales simplifican la planificación de viajes", "content": "Las apps de reservas, traducción y navegación reducen las complicaciones en el extranjero, aunque sigue siendo prudente guardar copias sin conexión de los documentos clave."},
+        "fr": {"title": "Les outils numériques simplifient l'organisation des voyages", "content": "Les applications de réservation, de traduction et de navigation facilitent les séjours à l'étranger, mais il reste prudent de garder des copies hors ligne des documents importants."},
+        "de": {"title": "Digitale Tools vereinfachen die Reiseplanung", "content": "Apps für Buchung, Übersetzung und Navigation erleichtern Reisen im Ausland, dennoch sollte man wichtige Dokumente auch offline dabeihaben."}
+      }
+    }
+  ]
+}

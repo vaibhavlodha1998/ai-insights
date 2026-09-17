@@ -10,7 +10,7 @@ from app.core.logging import configure_logging
 from app.core.middleware import REQUEST_ID_HEADER, RequestContextMiddleware
 from app.core.redis import create_redis
 from app.db.session import create_engine, create_session_factory
-from app.routers import health
+from app.routers import health, prompts
 from app.schemas.error import ErrorResponse
 
 
@@ -48,6 +48,7 @@ def create_app() -> FastAPI:
     app.add_middleware(RequestContextMiddleware)
 
     app.include_router(health.router)
+    app.include_router(prompts.router)
 
     return app
 

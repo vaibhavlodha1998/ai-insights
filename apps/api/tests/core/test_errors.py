@@ -4,7 +4,12 @@ import pytest
 from fastapi import FastAPI, HTTPException
 from fastapi.testclient import TestClient
 
-from app.core.errors import ConflictError, NotFoundError, error_code
+from app.core.errors import (
+    ConflictError,
+    NotFoundError,
+    error_code,
+    validation_error,
+)
 
 
 @pytest.fixture
@@ -39,7 +44,7 @@ def test_app_error_uses_its_status_and_code(error_client: TestClient) -> None:
     assert response.status_code == 404
     assert response.json() == {
         "error": {
-            "code": "not_found",
+            "code": "NOT_FOUND",
             "message": "Widget 42 does not exist",
             "request_id": response.headers["x-request-id"],
             "details": None,
@@ -58,7 +63,7 @@ def test_http_exception_is_wrapped(error_client: TestClient) -> None:
     response = error_client.get("/boom/http")
 
     assert response.status_code == 403
-    assert response.json()["error"]["code"] == "forbidden"
+    assert response.json()["error"]["code"] == "FORBIDDEN"
     assert response.json()["error"]["message"] == "Nope"
 
 
@@ -66,7 +71,7 @@ def test_unknown_route_is_wrapped(error_client: TestClient) -> None:
     response = error_client.get("/does-not-exist")
 
     assert response.status_code == 404
-    assert response.json()["error"]["code"] == "not_found"
+    assert response.json()["error"]["code"] == "NOT_FOUND"
 
 
 def test_validation_error_lists_problems(error_client: TestClient) -> None:
@@ -74,7 +79,7 @@ def test_validation_error_lists_problems(error_client: TestClient) -> None:
 
     body = response.json()["error"]
     assert response.status_code == 422
-    assert body["code"] == "validation_error"
+    assert body["code"] == "VALIDATION_ERROR"
     assert body["details"][0]["loc"] == ["path", "item_id"]
 
 
@@ -84,7 +89,7 @@ def test_unexpected_error_hides_internals(error_client: TestClient) -> None:
     assert response.status_code == 500
     assert response.json() == {
         "error": {
-            "code": "internal_error",
+            "code": "INTERNAL_ERROR",
             "message": "Internal server error",
             "request_id": "trace-1",
             "details": None,
@@ -93,5 +98,25 @@ def test_unexpected_error_hides_internals(error_client: TestClient) -> None:
 
 
 def test_error_code_from_status() -> None:
-    assert error_code(405) == "method_not_allowed"
-    assert error_code(599) == "error"
+    assert error_code(405) == "METHOD_NOT_ALLOWED"
+    assert error_code(599) == "ERROR"
+
+
+def test_validation_error_prefers_custom_codes() -> None:
+    errors = [
+        {"type": "PROMPT_REQUIRED", "msg": "Prompt is required", "loc": ("body",)}
+    ]
+
+    assert validation_error(errors) == (422, "PROMPT_REQUIRED", "Prompt is required")
+
+
+def test_validation_error_for_malformed_json() -> None:
+    errors = [{"type": "json_invalid", "msg": "JSON decode error", "loc": ("body", 1)}]
+
+    assert validation_error(errors)[:2] == (400, "INVALID_JSON")
+
+
+def test_validation_error_for_missing_body() -> None:
+    errors = [{"type": "missing", "msg": "Field required", "loc": ("body",)}]
+
+    assert validation_error(errors)[:2] == (422, "INVALID_BODY")

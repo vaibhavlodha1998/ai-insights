@@ -1,5 +1,5 @@
 import logging
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 from http import HTTPStatus
 from typing import Any
 
@@ -18,7 +18,7 @@ class AppError(Exception):
     """Expected failure raised from services, rendered as the standard error body."""
 
     status_code = 400
-    code = "bad_request"
+    code = "BAD_REQUEST"
 
     def __init__(self, message: str, *, details: Any = None) -> None:
         super().__init__(message)
@@ -28,21 +28,38 @@ class AppError(Exception):
 
 class NotFoundError(AppError):
     status_code = 404
-    code = "not_found"
+    code = "NOT_FOUND"
 
 
 class ConflictError(AppError):
     status_code = 409
-    code = "conflict"
+    code = "CONFLICT"
 
 
 def error_code(status_code: int) -> str:
-    """`404` -> `not_found`, `405` -> `method_not_allowed`."""
+    """`404` -> `NOT_FOUND`, `405` -> `METHOD_NOT_ALLOWED`."""
     try:
         phrase = HTTPStatus(status_code).phrase
     except ValueError:
-        return "error"
-    return phrase.lower().replace(" ", "_").replace("-", "_")
+        return "ERROR"
+    return phrase.upper().replace(" ", "_").replace("-", "_")
+
+
+def validation_error(errors: Sequence[Mapping[str, Any]]) -> tuple[int, str, str]:
+    """Status, code and message for a request validation failure.
+
+    Schemas raise `PydanticCustomError("SOME_CODE", "message")` for errors the client
+    should be able to tell apart; the first error reported decides the response.
+    """
+    first = errors[0] if errors else {}
+    error_type = str(first.get("type", ""))
+    if error_type == "json_invalid":
+        return 400, "INVALID_JSON", "Request body is not valid JSON"
+    if error_type == "missing" and tuple(first.get("loc", ())) == ("body",):
+        return 422, "INVALID_BODY", "Request body must be a JSON object"
+    if error_type.isupper():
+        return 422, error_type, str(first.get("msg", ""))
+    return 422, "VALIDATION_ERROR", "Request validation failed"
 
 
 def error_response(
@@ -84,15 +101,19 @@ async def handle_http_exception(request: Request, exc: Exception) -> JSONRespons
 
 async def handle_validation_error(request: Request, exc: Exception) -> JSONResponse:
     assert isinstance(exc, RequestValidationError)
-    return error_response(
-        request, 422, "validation_error", "Request validation failed", exc.errors()
-    )
+    # Drop the echoed input: it can be large and may contain sensitive values
+    errors = [
+        {key: value for key, value in error.items() if key != "input"}
+        for error in exc.errors()
+    ]
+    status_code, code, message = validation_error(errors)
+    return error_response(request, status_code, code, message, errors)
 
 
 async def handle_unexpected_error(request: Request, exc: Exception) -> JSONResponse:
     # Details stay in the logs; clients only get the request id to quote
     logger.error("Unhandled error", exc_info=exc)
-    return error_response(request, 500, "internal_error", "Internal server error")
+    return error_response(request, 500, "INTERNAL_ERROR", "Internal server error")
 
 
 def register_exception_handlers(app: FastAPI) -> None:
