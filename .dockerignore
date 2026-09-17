@@ -1,0 +1,10 @@
+# Build context for apps/web/Dockerfile (the api builds from apps/api)
+.git
+.env
+.env.*
+**/node_modules
+**/.next
+.yarn/cache
+.yarn/install-state.gz
+apps/api
+infra

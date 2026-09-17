@@ -3821,6 +3821,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"server-only@npm:^0.0.1":
+  version: 0.0.1
+  resolution: "server-only@npm:0.0.1"
+  checksum: 10c0/4704f0ef85da0be981af6d4ed8e739d39bcfd265b9c246a684060acda5642d0fdc6daffc2308e71e2682c5f508090978802eae0a77623c9b90a49f9ae68048d6
+  languageName: node
+  linkType: hard
+
 "set-function-length@npm:^1.2.2":
   version: 1.2.2
   resolution: "set-function-length@npm:1.2.2"
@@ -4449,6 +4456,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "web@workspace:apps/web"
   dependencies:
+    "@next/env": "npm:16.3.5"
     "@tailwindcss/postcss": "npm:^4"
     "@types/node": "npm:^20"
     "@types/react": "npm:^19"
@@ -4458,6 +4466,7 @@ __metadata:
     next: "npm:16.3.5"
     react: "npm:19.2.8"
     react-dom: "npm:19.2.8"
+    server-only: "npm:^0.0.1"
     tailwindcss: "npm:^4"
     typescript: "npm:^5"
   languageName: unknown

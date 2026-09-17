@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  api:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/api
+    services:
+      postgres:
+        image: pgvector/pgvector:pg17
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: starter
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U postgres -d starter"
+          --health-interval 5s --health-timeout 3s --health-retries 10
+    env:
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: 5432
+    steps:
+      - uses: actions/checkout@v4
+      - run: pipx install poetry==2.4.1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: poetry
+          cache-dependency-path: apps/api/poetry.lock
+      - run: poetry install
+      - name: Lint
+        run: |
+          poetry run ruff check app tests alembic
+          poetry run ruff format --check app tests alembic
+          poetry run mypy app tests alembic
+      - name: Test
+        run: poetry run pytest
+      - name: Migrations apply and match the models
+        run: |
+          poetry run alembic upgrade head
+          poetry run alembic check
+
+  web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: corepack enable
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+      - run: yarn install --immutable
+      - run: yarn lint:web
+      - run: yarn build:web

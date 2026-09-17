@@ -1,1 +1,7 @@
-Generic single-database configuration.
+Alembic migration environment for the api.
+
+- env.py builds the database URL from app.core.config.settings (the repo-root .env)
+  and uses app.models.Base.metadata for autogenerate.
+- New revisions are written to versions/ and formatted with ruff.
+
+Usage: see apps/api/README.md#migrations

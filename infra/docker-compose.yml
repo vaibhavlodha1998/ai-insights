@@ -1,20 +1,22 @@
-# Development datastores. Host ports avoid the common 5432/6379 so this can run
-# alongside other projects; override with POSTGRES_PORT / REDIS_PORT.
 name: starter
+
+# Values come from the repo-root .env (the yarn scripts pass --env-file .env).
+# `yarn infra:up` starts only the datastores; `yarn app:up` also builds and runs
+# the api and web containers (the "app" profile).
 
 services:
   postgres:
     image: pgvector/pgvector:pg17
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: starter
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-starter}
     ports:
       - "${POSTGRES_PORT:-5434}:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d starter"]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 5s
       timeout: 3s
       retries: 10
@@ -30,6 +32,57 @@ services:
       interval: 5s
       timeout: 3s
       retries: 10
+
+  migrate:
+    profiles: [app]
+    build: ../apps/api
+    command: ["alembic", "upgrade", "head"]
+    env_file:
+      - path: ../.env
+        required: false
+    environment: &api-datastores
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  api:
+    profiles: [app]
+    build: ../apps/api
+    env_file:
+      - path: ../.env
+        required: false
+    environment: *api-datastores
+    ports:
+      - "8000:8000"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  web:
+    profiles: [app]
+    build:
+      context: ..
+      dockerfile: apps/web/Dockerfile
+      args:
+        API_URL: http://api:8000
+    environment:
+      API_URL: http://api:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      api:
+        condition: service_healthy
 
 volumes:
   postgres-data:

@@ -1,0 +1,36 @@
+# Install once with: cd apps/api && poetry run pre-commit install
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-toml
+      - id: check-merge-conflict
+      - id: check-added-large-files
+      - id: detect-private-key
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.16.7
+    hooks:
+      - id: ruff-check
+        args: [--fix]
+        files: ^apps/api/
+      - id: ruff-format
+        files: ^apps/api/
+
+  - repo: local
+    hooks:
+      - id: api-lint
+        name: ruff + mypy (api)
+        entry: yarn lint:api
+        language: system
+        files: ^apps/api/.*\.py$
+        pass_filenames: false
+      - id: web-lint
+        name: eslint + tsc (web)
+        entry: yarn lint:web
+        language: system
+        files: ^apps/web/.*\.(ts|tsx|js|mjs)$
+        pass_filenames: false
