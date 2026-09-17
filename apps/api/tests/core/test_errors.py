@@ -1,0 +1,97 @@
+from collections.abc import Iterator
+
+import pytest
+from fastapi import FastAPI, HTTPException
+from fastapi.testclient import TestClient
+
+from app.core.errors import ConflictError, NotFoundError, error_code
+
+
+@pytest.fixture
+def error_client(app: FastAPI) -> Iterator[TestClient]:
+    @app.get("/boom/not-found")
+    async def raise_not_found() -> None:
+        raise NotFoundError("Widget 42 does not exist")
+
+    @app.get("/boom/conflict")
+    async def raise_conflict() -> None:
+        raise ConflictError("Name taken", details={"field": "name"})
+
+    @app.get("/boom/http")
+    async def raise_http() -> None:
+        raise HTTPException(status_code=403, detail="Nope")
+
+    @app.get("/boom/unexpected")
+    async def raise_unexpected() -> None:
+        raise RuntimeError("secret internals")
+
+    @app.get("/items/{item_id}")
+    async def read_item(item_id: int) -> dict[str, int]:
+        return {"item_id": item_id}
+
+    with TestClient(app, raise_server_exceptions=False) as client:
+        yield client
+
+
+def test_app_error_uses_its_status_and_code(error_client: TestClient) -> None:
+    response = error_client.get("/boom/not-found")
+
+    assert response.status_code == 404
+    assert response.json() == {
+        "error": {
+            "code": "not_found",
+            "message": "Widget 42 does not exist",
+            "request_id": response.headers["x-request-id"],
+            "details": None,
+        }
+    }
+
+
+def test_app_error_includes_details(error_client: TestClient) -> None:
+    response = error_client.get("/boom/conflict")
+
+    assert response.status_code == 409
+    assert response.json()["error"]["details"] == {"field": "name"}
+
+
+def test_http_exception_is_wrapped(error_client: TestClient) -> None:
+    response = error_client.get("/boom/http")
+
+    assert response.status_code == 403
+    assert response.json()["error"]["code"] == "forbidden"
+    assert response.json()["error"]["message"] == "Nope"
+
+
+def test_unknown_route_is_wrapped(error_client: TestClient) -> None:
+    response = error_client.get("/does-not-exist")
+
+    assert response.status_code == 404
+    assert response.json()["error"]["code"] == "not_found"
+
+
+def test_validation_error_lists_problems(error_client: TestClient) -> None:
+    response = error_client.get("/items/abc")
+
+    body = response.json()["error"]
+    assert response.status_code == 422
+    assert body["code"] == "validation_error"
+    assert body["details"][0]["loc"] == ["path", "item_id"]
+
+
+def test_unexpected_error_hides_internals(error_client: TestClient) -> None:
+    response = error_client.get("/boom/unexpected", headers={"X-Request-ID": "trace-1"})
+
+    assert response.status_code == 500
+    assert response.json() == {
+        "error": {
+            "code": "internal_error",
+            "message": "Internal server error",
+            "request_id": "trace-1",
+            "details": None,
+        }
+    }
+
+
+def test_error_code_from_status() -> None:
+    assert error_code(405) == "method_not_allowed"
+    assert error_code(599) == "error"

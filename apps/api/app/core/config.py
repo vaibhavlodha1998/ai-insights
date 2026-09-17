@@ -1,6 +1,6 @@
 from functools import lru_cache
 from pathlib import Path
-from typing import Annotated
+from typing import Annotated, Literal
 
 from pydantic import field_validator
 from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
@@ -19,6 +19,10 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "starter"
     VERSION: str = "0.1.0"
     ENVIRONMENT: str = "dev"
+
+    LOG_LEVEL: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = "INFO"
+    # "text" for humans in a terminal, "json" for log collectors
+    LOG_FORMAT: Literal["text", "json"] = "text"
 
     # Browser origins allowed to call the API, comma-separated in the env file
     CORS_ORIGINS: Annotated[list[str], NoDecode] = ["http://localhost:3000"]

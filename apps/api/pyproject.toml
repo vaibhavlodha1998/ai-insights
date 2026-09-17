@@ -25,6 +25,10 @@ package-mode = false
 # Explicit so `app` is first-party even when ruff runs from the repo root (pre-commit)
 src = ["."]
 
+[tool.ruff.lint.isort]
+# The local alembic/ folder is migrations, not the alembic package
+known-third-party = ["alembic"]
+
 [tool.pytest.ini_options]
 pythonpath = ["."]
 testpaths = ["tests"]

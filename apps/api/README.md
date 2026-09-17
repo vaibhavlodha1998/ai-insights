@@ -6,20 +6,26 @@ FastAPI service using async SQLAlchemy (psycopg 3), Redis and Alembic. Dependenc
 
 ```
 app/
-  main.py            create_app(): CORS, routers, lifespan (creates and closes the DB engine and Redis client)
+  main.py            configure_logging(), create_app(): error handlers, middleware, routers, lifespan
   core/
     config.py        Settings, read from the repo-root .env (then apps/api/.env, then real env vars)
+    errors.py        AppError / NotFoundError / ConflictError and the exception handlers
+    logging.py       logging setup: text or JSON output, request id on every log record
+    middleware.py    RequestContextMiddleware: X-Request-ID and one log line per request
     redis.py         create_redis() and the get_redis dependency
-    loop.py          selector event loop for Windows dev
+    loop.py          selector event loop for Windows (dev server and tests)
   db/
     base.py          DeclarativeBase with constraint naming conventions
     session.py       create_engine(), create_session_factory() and the get_session dependency
   models/            SQLAlchemy models; import each one in __init__.py so Alembic sees it
   routers/           HTTP layer: parses requests and sets status codes
-  schemas/           Pydantic request and response models
+  schemas/           Pydantic request and response models (error.py is the error body)
   services/          business logic, kept free of FastAPI so it's easy to unit test
 alembic/             migration environment; migrations go in versions/
-tests/               mirrors app/ (core/, routers/, services/)
+tests/
+  conftest.py        app, client, test_database, db_session and db_client fixtures
+  core/ routers/ services/   mirror app/
+  db/                tests against the real test database
 ```
 
 ## Endpoints
@@ -38,12 +44,63 @@ Interactive docs: http://localhost:8000/docs
 - **Redis:** use `redis: Annotated[Redis, Depends(get_redis)]`.
 - **Settings:** `from app.core.config import settings`. `settings.DATABASE_URL` (a SQLAlchemy `URL`) and `settings.REDIS_URL` are built from the `POSTGRES_*` and `REDIS_*` variables.
 
+## Errors
+
+Every error response the API generates has this shape:
+
+```json
+{
+  "error": {
+    "code": "not_found",
+    "message": "Widget 42 does not exist",
+    "request_id": "3f2b0c1e9a8d4f6b8c7d5e4f3a2b1c0d",
+    "details": null
+  }
+}
+```
+
+| Source | Status | `code` | `details` |
+| --- | --- | --- | --- |
+| `raise NotFoundError("...")` / `ConflictError("...")` | 404 / 409 | `not_found` / `conflict` | whatever you pass as `details=` |
+| `raise AppError("...")` | 400 | `bad_request` | whatever you pass as `details=` |
+| `raise HTTPException(403, "...")`, unknown routes, wrong methods | from the exception | from the status (`forbidden`, `not_found`, `method_not_allowed`) | non-string `detail`, if any |
+| Invalid path, query or body | 422 | `validation_error` | Pydantic's error list (`loc`, `msg`, `type`) |
+| Any other exception | 500 | `internal_error` | none. The message is generic and the traceback only goes to the logs |
+
+Raise `AppError` subclasses from services for expected failures, since they don't depend on FastAPI. Add your own subclass by setting `status_code` and `code`:
+
+```python
+class PaymentRequiredError(AppError):
+    status_code = 402
+    code = "payment_required"
+```
+
+`/health/ready` returning 503 isn't an error in this sense: it's a normal readiness report.
+
+## Logging and request IDs
+
+- `configure_logging()` runs once when `app.main` is imported. Uvicorn's own logs go through the same handler, so everything shares one format.
+- `RequestContextMiddleware` reuses an incoming `X-Request-ID` if it's 1–128 characters from `[A-Za-z0-9._-]`, and generates one otherwise. It returns the id in the `X-Request-ID` response header (exposed to browsers through CORS), includes it in every log record, and adds it to error bodies. It logs one `app.request` line per request, with method, path, status and duration. Uvicorn's access log is turned off to avoid duplicates.
+- Log from your own code with `logging.getLogger(__name__)`. Fields passed as `extra={...}` become top-level keys in JSON output.
+
+Text output (`LOG_FORMAT=text`):
+
+```
+2026-09-17 10:50:27,061 INFO     app.request [live-8002] GET /health/ready 200 61.8ms
+```
+
+JSON output (`LOG_FORMAT=json`):
+
+```json
+{"timestamp": "2026-09-17T05:20:26.887727+00:00", "level": "INFO", "logger": "app.request", "message": "GET /health/ready 200 83.2ms", "request_id": "live-8001", "method": "GET", "path": "/health/ready", "status_code": 200, "duration_ms": 83.2}
+```
+
 ## Adding an endpoint
 
 1. Add the schema in `app/schemas/<feature>.py`.
-2. Add the logic in `app/services/<feature>.py`. Take sessions and clients as arguments.
+2. Add the logic in `app/services/<feature>.py`. Take sessions and clients as arguments, and raise `AppError` subclasses for expected failures.
 3. Add the router in `app/routers/<feature>.py` and register it in `create_app()` with `app.include_router(...)`.
-4. Add tests: unit tests for the service in `tests/services/`, and route tests in `tests/routers/` that stub the service with `monkeypatch`, as `tests/routers/test_health.py` does.
+4. Add tests (see below).
 
 ## Migrations
 
@@ -56,7 +113,7 @@ poetry run alembic downgrade -1
 poetry run alembic check      # fails if the models have changes with no migration
 ```
 
-`env.py` runs psycopg synchronously, so migrations don't need an event loop on any platform.
+`env.py` runs psycopg synchronously, so migrations don't need an event loop on any platform. If a caller passes a connection in `config.attributes["connection"]`, Alembic migrates over that connection. The test fixtures use this to migrate the test database.
 
 ## Tests and lint
 
@@ -67,7 +124,40 @@ poetry run ruff format --check app tests alembic
 poetry run mypy app tests alembic
 ```
 
-Tests don't need Docker. The `client` fixture in `tests/conftest.py` builds a fresh app with `TestClient`, and datastore checks are stubbed or use `fakeredis`. Async tests use `pytest.mark.anyio`.
+Fixtures in `tests/conftest.py`:
+
+| Fixture | Gives you | Use for |
+| --- | --- | --- |
+| `app` | A fresh `create_app()` | Adding test-only routes or `dependency_overrides` |
+| `client` | Sync `TestClient` (runs the lifespan) | Route tests that stub services with `monkeypatch`, like `tests/routers/test_health.py` |
+| `test_database` | URL of a freshly recreated and migrated `<POSTGRES_DB>_test` database (once per run) | Rarely used directly |
+| `db_session` | `AsyncSession` inside a transaction that is rolled back after the test | Service and model tests against real Postgres |
+| `db_client` | Async `httpx2` client whose requests use `db_session` and an in-memory Redis | Route tests against real Postgres |
+
+Database tests are async, so mark them with `pytest.mark.anyio`:
+
+```python
+import pytest
+from httpx2 import AsyncClient
+from sqlalchemy.ext.asyncio import AsyncSession
+
+pytestmark = pytest.mark.anyio
+
+
+async def test_service_writes(
+    db_session: AsyncSession,
+) -> (
+    None
+): ...  # calling db_session.commit() is fine; everything is rolled back afterwards
+
+
+async def test_route_reads(db_client: AsyncClient) -> None:
+    response = await db_client.get("/health/ready")
+```
+
+- Use `db_client`, not `client`, when a route touches the database. `TestClient` runs the app on its own event loop, which can't share `db_session`'s connection.
+- If Postgres isn't reachable, tests that use the database fixtures are **skipped** after a short connection timeout (3 s per address tried), and everything else still runs. Set `TEST_DATABASE_REQUIRED=1` (CI does) to make that a failure.
+- `tests/db/test_database.py` checks that the fixtures themselves isolate tests.
 
 ## Docker
 

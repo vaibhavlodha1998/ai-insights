@@ -7,6 +7,16 @@ export type ReadinessResponse = {
   checks: Record<string, CheckStatus>;
 };
 
+/** Body of every error response from the API (see apps/api/app/schemas/error.py). */
+export type ApiErrorBody = {
+  error: {
+    code: string;
+    message: string;
+    request_id: string | null;
+    details: unknown;
+  };
+};
+
 const API_URL = process.env.API_URL ?? "http://localhost:8000";
 
 /** Server-side fetch against the API. Browser code should call `/api/*` instead. */

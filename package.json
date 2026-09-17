@@ -12,9 +12,12 @@
     "app:down": "docker compose --env-file .env -f infra/docker-compose.yml --profile app down",
     "dev:web": "yarn workspace web dev",
     "dev:api": "cd apps/api && poetry run uvicorn app.main:app --reload --port 8000 --loop app.core.loop:selector_loop_factory",
+    "start:api": "cd apps/api && poetry run uvicorn app.main:app --port 8000 --loop app.core.loop:selector_loop_factory",
     "db:migrate": "cd apps/api && poetry run alembic upgrade head",
     "db:revision": "cd apps/api && poetry run alembic revision --autogenerate -m",
     "test:api": "cd apps/api && poetry run pytest",
+    "test:web": "yarn workspace web test",
+    "test:e2e": "yarn workspace web test:e2e",
     "lint:api": "cd apps/api && poetry run ruff check app tests alembic && poetry run ruff format --check app tests alembic && poetry run mypy app tests alembic",
     "lint:web": "yarn workspace web lint && yarn workspace web typecheck",
     "build:web": "yarn workspace web build"
