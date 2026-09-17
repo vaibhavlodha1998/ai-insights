@@ -20,11 +20,12 @@ No LLM is called: the "AI" is a provider interface backed by multilingual insigh
   - It validates in a fixed order, with specific codes and messages (`PROMPT_REQUIRED`, `INVALID_LANGUAGE`, `INVALID_CONTEXT_ID`, ...).
   - Vague prompts get `NEEDS_CLARIFICATION` before any AI call. A follow-up sent with the `contextId` is judged together with the earlier prompts.
   - Otherwise it returns ranked insights, 10 per page, with pagination metadata. `GET /prompts/{responseId}/insights?page=N` serves the rest of the same result.
-- **Web client** ([details](apps/web/README.md)):
-  - A prompt form with Zod validation; submit is disabled until the form is valid.
-  - A clarification notice that continues the conversation.
-  - Structured error alerts, with field errors mapped onto the form.
-  - Insight cards with "Load more" (an RTK Query infinite query whose page 1 is seeded from the POST), 300 ms debounced search over loaded insights, and title/content A–Z and Z–A sorting.
+- **Web client** ([details](apps/web/README.md)), built on an in-repo component library (`apps/web/src/components/ui`) that follows the AI Insights UI design:
+  - A prompt form with Zod validation (submit disabled until valid), suggested questions, and a loading state.
+  - A follow-up flow when more details are needed.
+  - Errors in plain words: on the field, or in an alert with Try again.
+  - Insight cards with "Load more" (an RTK Query infinite query whose page 1 is seeded from the POST), 300 ms debounced search with highlighted matches, and Title/Content sorting with an A–Z / Z–A toggle.
+  - A **Session state** page (`/state`) showing the global store: request, response, clarification thread, results view and last error.
 - **API platform:**
   - Two health endpoints. `GET /health` is a liveness check that doesn't touch any dependency. `GET /health/ready` checks Postgres and Redis at the same time with a 2 s timeout and returns `503` if either is down.
   - Every response carries an `X-Request-ID` header, and every request is logged once with that id. Logs are readable text or JSON.
@@ -33,8 +34,8 @@ No LLM is called: the "AI" is a provider interface backed by multilingual insigh
 - **Database:** one migration creates `insights`, `conversations` and `prompt_responses`, and seeds 36 insights in 4 languages. Alembic is wired to the app's settings and to a shared `Base` with constraint naming conventions.
 - **Tests:**
   - 83 API tests, many against a real, migrated and seeded Postgres test database, rolled back after each test.
-  - 47 web unit and component tests (Vitest + Testing Library).
-  - 11 end-to-end tests (Playwright) across the whole stack.
+  - 77 web unit and component tests (Vitest + Testing Library).
+  - 13 end-to-end tests (Playwright) across the whole stack.
 - **Tooling:** Docker images for both apps, pre-commit hooks, and GitHub Actions CI.
 
 Not included: auth and users (`bcrypt` is installed but unused), and real LLM calls.

@@ -2,7 +2,14 @@ import { describe, expect, test } from "vitest";
 
 import { makeInsight } from "@/test/utils";
 
-import { filterInsights, normalizeText, sortInsights } from "./filter-sort";
+import {
+  filterInsights,
+  highlightSegments,
+  normalizeText,
+  searchWords,
+  sortInsights,
+  type SortOrder,
+} from "./filter-sort";
 
 const collator = new Intl.Collator("en", { sensitivity: "base", numeric: true });
 
@@ -39,28 +46,60 @@ describe("filterInsights", () => {
 });
 
 describe("sortInsights", () => {
-  test("keeps the API order for relevance", () => {
-    expect(sortInsights(insights, "relevance", collator)).toBe(insights);
+  const order = (field: SortOrder["field"], direction: SortOrder["direction"]) => ({
+    field,
+    direction,
+  });
+
+  test("keeps the API order for relevance, whatever the direction", () => {
+    expect(sortInsights(insights, order("relevance", "desc"), collator)).toBe(insights);
   });
 
   test.each([
-    ["title-asc", ["apps for travel", "Telemedicine", "Zero trust security"]],
-    ["title-desc", ["Zero trust security", "Telemedicine", "apps for travel"]],
-  ] as const)("sorts by %s, ignoring case", (order, titles) => {
-    expect(sortInsights(insights, order, collator).map((i) => i.title)).toEqual(titles);
+    ["asc", ["apps for travel", "Telemedicine", "Zero trust security"]],
+    ["desc", ["Zero trust security", "Telemedicine", "apps for travel"]],
+  ] as const)("sorts by title %s, ignoring case", (direction, titles) => {
+    expect(sortInsights(insights, order("title", direction), collator).map((i) => i.title)).toEqual(
+      titles,
+    );
   });
 
   test.each([
-    ["content-asc", ["Booking and navigation", "Consultas por vídeo", "Verify every request"]],
-    ["content-desc", ["Verify every request", "Consultas por vídeo", "Booking and navigation"]],
-  ] as const)("sorts by %s", (order, contents) => {
-    expect(sortInsights(insights, order, collator).map((i) => i.content)).toEqual(contents);
+    ["asc", ["Booking and navigation", "Consultas por vídeo", "Verify every request"]],
+    ["desc", ["Verify every request", "Consultas por vídeo", "Booking and navigation"]],
+  ] as const)("sorts by content %s", (direction, contents) => {
+    expect(
+      sortInsights(insights, order("content", direction), collator).map((i) => i.content),
+    ).toEqual(contents);
   });
 
   test("does not mutate its input", () => {
     const before = [...insights];
-    sortInsights(insights, "title-desc", collator);
+    sortInsights(insights, order("title", "desc"), collator);
 
     expect(insights).toEqual(before);
+  });
+});
+
+describe("highlightSegments", () => {
+  const marked = (text: string, term: string) =>
+    highlightSegments(text, searchWords(term))
+      .map((segment) => (segment.match ? `[${segment.text}]` : segment.text))
+      .join("");
+
+  test("marks every occurrence, case-insensitively", () => {
+    expect(marked("Security and cybersecurity", "security")).toBe("[Security] and cyber[security]");
+  });
+
+  test("matches accented text with an unaccented term, keeping the original characters", () => {
+    expect(marked("Consultas por vídeo", "video")).toBe("Consultas por [vídeo]");
+  });
+
+  test("marks each word and merges overlapping matches", () => {
+    expect(marked("zero trust security", "trust rust sec")).toBe("zero [trust] [sec]urity");
+  });
+
+  test("returns the text untouched without search words", () => {
+    expect(highlightSegments("Telemedicine", [])).toEqual([{ text: "Telemedicine", match: false }]);
   });
 });

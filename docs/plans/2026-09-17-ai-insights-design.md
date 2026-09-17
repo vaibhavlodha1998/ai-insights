@@ -72,7 +72,8 @@ src/
   lib/hooks/      useDebouncedValue
   features/prompts/    api endpoints, zod schema, session slice, form + clarification notice
   features/insights/   view slice (search, sort), filter/sort utils, results components
-  components/     cross-feature: InsightsWorkspace (page composition), ApiErrorAlert
+  components/     ui/ (reusable component library on theme tokens), layout/, InsightsWorkspace
+  features/session-state/  the /state page: a read-only view of the global store
 ```
 
 - **Global state:**
@@ -84,9 +85,9 @@ src/
   - The `getInsights` **infinite query** is keyed by `responseId`, with `pageParam` = page and the next page taken from `pagination.hasNextPage`.
   - Page 1 from the POST is written into that cache with `upsertQueryEntries` inside the mutation's `queryFn`, which is synchronous and runs before the mutation resolves. Seeding in `onQueryStarted` would run after `responseId` reached the UI, letting the results view request page 1 again.
 - **Form:**
-  - `mode: "onChange"`, and submit is disabled until the Zod schema passes (prompt 1–2000 chars trimmed, language from the enum).
+  - `mode: "all"` (messages once a field is changed or left), and submit is disabled until the Zod schema passes (prompt 1–2000 chars trimmed, language from the enum).
   - The 5-character rule is deliberately **not** enforced client-side: that decision belongs to the backend.
-  - 4xx field codes are mapped onto form fields, and everything else goes to a structured error alert.
+  - 4xx field codes are mapped onto form fields. Everything else goes to an alert in plain words (no codes or request IDs on the product page; those appear on `/state`).
 - **Clarification:** a notice above the form shows the message and the pending turns. The next submit sends `contextId`, and "Start over" clears it.
 - **Performance:**
   - The search input keeps local state, and only the debounced value (300 ms) reaches the store.
@@ -94,7 +95,7 @@ src/
   - `InsightCard` is `memo`ized, so appending a page renders only the new cards.
   - Callbacks are stable, and a memoized `Intl.Collator` is created per language.
 - **Search:** case- and accent-insensitive match on title, content, category, source and tags.
-- **Sort:** relevance (backend order), title A–Z / Z–A, content A–Z / Z–A.
+- **Sort:** relevance (backend order), or title/content with an A–Z / Z–A toggle.
 
 ## Testing
 

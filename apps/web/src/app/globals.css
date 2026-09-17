@@ -1,26 +1,57 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* Design tokens from the "AI Insights UI" design. Components use these names only. */
+@theme {
+  --color-paper: #f6f4ef;
+  --color-surface: #ffffff;
+  --color-surface-muted: #fbfaf7;
+  --color-line: #e4e0d6;
+  --color-line-strong: #d6d1c4;
+  --color-line-subtle: #ece8df;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-ink: #1c1b19;
+  --color-ink-soft: #3d3a35;
+  --color-ink-muted: #4a463f;
+  --color-muted: #5f5b53;
+  --color-subtle: #6b665c;
+  --color-faint: #8a857a;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  --color-accent: #0f6e6a;
+  --color-accent-hover: #0a4f4c;
+  --color-accent-soft: #e1efec;
+
+  --color-disabled: #e7e3da;
+  --color-mark: #fbe7a4;
+
+  --color-warning-bg: #fdf3e1;
+  --color-warning-line: #f1d29e;
+  --color-warning-ink: #4a2a05;
+  --color-warning-text: #6b3f0a;
+  --color-warning-icon: #b45309;
+
+  --color-danger: #b42318;
+  --color-danger-hover: #93190f;
+  --color-danger-bg: #fdf0ee;
+  --color-danger-line: #f4c7c1;
+  --color-danger-ink: #4f130f;
+  --color-danger-text: #a1201a;
+  --color-danger-soft: #fbe4e1;
+
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-sans: var(--font-plex-sans), system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+
+  --animate-pulse-soft: pulse-soft 1.6s ease-in-out infinite;
+
+  @keyframes pulse-soft {
+    50% {
+      opacity: 0.55;
+    }
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans), system-ui, sans-serif;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
 }

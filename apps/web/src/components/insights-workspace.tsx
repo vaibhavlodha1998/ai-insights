@@ -1,45 +1,64 @@
 "use client";
 
 import { ResultsPanel } from "@/features/insights/components/results-panel";
+import { ResultsSkeleton } from "@/features/insights/components/results-skeleton";
+import { ClarificationHelp } from "@/features/prompts/components/clarification-help";
 import { ClarificationNotice } from "@/features/prompts/components/clarification-notice";
 import { PromptForm } from "@/features/prompts/components/prompt-form";
+import { SubmitError } from "@/features/prompts/components/submit-error";
+import { Welcome } from "@/features/prompts/components/welcome";
+import { errorField } from "@/features/prompts/errors";
 import {
-  dismissError,
+  selectContextId,
+  selectLastRequest,
+  selectPendingPrompts,
   selectResponseId,
+  selectResultsFor,
   selectSessionError,
   selectSessionStatus,
 } from "@/features/prompts/prompt-session-slice";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { useAppSelector } from "@/store/hooks";
 
-import { ApiErrorAlert } from "./api-error-alert";
-
-/** Page composition: the form, then whatever the last response calls for. */
+/** Page composition: the form on the left, whatever the session calls for on the right. */
 export function InsightsWorkspace() {
-  const dispatch = useAppDispatch();
+  return (
+    <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[392px_minmax(0,1fr)] lg:gap-12">
+      <div className="flex flex-col gap-4 lg:sticky lg:top-6">
+        {/* Above the form, which is where the requested details go */}
+        <ClarificationNotice />
+        <PromptForm />
+      </div>
+      <WorkspaceMain />
+    </div>
+  );
+}
+
+function WorkspaceMain() {
   const status = useAppSelector(selectSessionStatus);
   const error = useAppSelector(selectSessionError);
   const responseId = useAppSelector(selectResponseId);
+  const resultsFor = useAppSelector(selectResultsFor);
+  const contextId = useAppSelector(selectContextId);
+  const pendingPrompts = useAppSelector(selectPendingPrompts);
+  const lastRequest = useAppSelector(selectLastRequest);
+
+  if (status === "submitting" && lastRequest) {
+    return <ResultsSkeleton query={[...pendingPrompts, lastRequest.prompt].join(" ")} />;
+  }
+
+  // Field problems are shown on the form itself
+  const pageError = error && !errorField(error) ? error : null;
 
   return (
-    <div className="flex flex-col gap-6">
-      {/* Above the form, which is where the requested details go */}
-      <ClarificationNotice />
-
-      <section className="rounded-xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-        <PromptForm />
-      </section>
-
-      {error && <ApiErrorAlert error={error} onDismiss={() => dispatch(dismissError())} />}
-
-      {/* Keyed so search and scroll state reset for each new response */}
-      {responseId ? (
-        <ResultsPanel key={responseId} responseId={responseId} />
+    <div className="flex min-w-0 flex-col gap-8">
+      {pageError && <SubmitError error={pageError} />}
+      {contextId ? (
+        <ClarificationHelp />
+      ) : responseId && resultsFor ? (
+        // Keyed so search input and scroll state reset for each new result
+        <ResultsPanel key={responseId} responseId={responseId} query={resultsFor} />
       ) : (
-        status === "idle" && (
-          <p className="text-center text-sm text-zinc-500">
-            Ask about technology, health, finance, climate or travel to see insights.
-          </p>
-        )
+        !pageError && <Welcome />
       )}
     </div>
   );

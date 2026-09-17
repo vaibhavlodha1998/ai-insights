@@ -11,6 +11,9 @@ import {
   selectLastRequest,
   selectPendingPrompts,
   selectResponseId,
+  selectResultsFor,
+  selectDraft,
+  fillPrompt,
   selectSessionError,
   selectSessionStatus,
   startOver,
@@ -43,6 +46,7 @@ describe("submitting a prompt", () => {
     expect(selectSessionStatus(state)).toBe("success");
     expect(selectLastRequest(state)).toEqual({ prompt: "AI in health", targetLanguage: "en" });
     expect(selectResponseId(state)).toBe("response-1");
+    expect(selectResultsFor(state)).toBe("AI in health");
     expect(selectContextId(state)).toBeNull();
 
     const cached = getInsights.select("response-1")(state);
@@ -75,6 +79,7 @@ describe("submitting a prompt", () => {
       contextId: "context-1",
     });
     expect(selectSessionStatus(store.getState())).toBe("success");
+    expect(selectResultsFor(store.getState())).toBe("AI in healthcare");
     expect(selectPendingPrompts(store.getState())).toEqual([]);
     expect(selectContextId(store.getState())).toBeNull();
   });
@@ -128,5 +133,15 @@ describe("submitting a prompt", () => {
 
     expect(selectSessionStatus(store.getState())).toBe("idle");
     expect(selectContextId(store.getState())).toBeNull();
+  });
+
+  test("fillPrompt creates a new draft each time, even with the same text", () => {
+    const store = makeStore();
+
+    store.dispatch(fillPrompt({ prompt: "in healthcare" }));
+    const first = selectDraft(store.getState());
+    store.dispatch(fillPrompt({ prompt: "in healthcare" }));
+
+    expect(selectDraft(store.getState())).toEqual({ prompt: "in healthcare", id: (first?.id ?? 0) + 1 });
   });
 });

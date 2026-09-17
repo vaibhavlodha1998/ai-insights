@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from "react";
 
+import { SearchField } from "@/components/ui";
 import { useDebouncedValue } from "@/lib/hooks/use-debounced-value";
-import { useAppDispatch } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
-import { setSearchTerm } from "../insights-view-slice";
+import { selectSearchTerm, setSearchTerm } from "../insights-view-slice";
 
 export const SEARCH_DEBOUNCE_MS = 300;
 
@@ -15,25 +16,38 @@ export const SEARCH_DEBOUNCE_MS = 300;
  */
 export function SearchInput() {
   const dispatch = useAppDispatch();
-  const [value, setValue] = useState("");
+  const storedTerm = useAppSelector(selectSearchTerm);
+  const [value, setValue] = useState(storedTerm);
   const debounced = useDebouncedValue(value, SEARCH_DEBOUNCE_MS);
 
   useEffect(() => {
     dispatch(setSearchTerm(debounced));
   }, [dispatch, debounced]);
 
+  // Cleared from elsewhere (e.g. "Clear search" in the empty state): adjust during
+  // render rather than in an effect, so the input never shows a stale value
+  const [previousStoredTerm, setPreviousStoredTerm] = useState(storedTerm);
+  if (storedTerm !== previousStoredTerm) {
+    setPreviousStoredTerm(storedTerm);
+    if (storedTerm === "") setValue("");
+  }
+
+  const handleChange = (next: string) => {
+    setValue(next);
+    // Clearing should show everything again right away
+    if (next === "") dispatch(setSearchTerm(""));
+  };
+
   return (
-    <div className="flex flex-1 flex-col gap-1.5">
-      <label htmlFor="insight-search" className="text-sm font-medium">
+    <div className="flex grow flex-col gap-1.5">
+      <label htmlFor="insight-search" className="text-[13px] font-semibold">
         Search
       </label>
-      <input
+      <SearchField
         id="insight-search"
-        type="search"
         value={value}
-        onChange={(event) => setValue(event.target.value)}
-        placeholder="Filter by text, category, source or tag"
-        className="h-10 w-full rounded-md border border-zinc-300 bg-white px-3 text-sm shadow-sm outline-none focus:border-zinc-900 focus:ring-2 focus:ring-zinc-900/10 dark:border-zinc-700 dark:bg-zinc-900 dark:focus:border-zinc-300"
+        onValueChange={handleChange}
+        placeholder="Search by text, category, source or tag"
       />
     </div>
   );

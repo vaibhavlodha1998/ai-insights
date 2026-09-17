@@ -1,9 +1,9 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 import { asApiError, type ApiError } from "@/lib/api/errors";
 
 import { promptsApi } from "./api";
-import type { PromptRequest } from "./types";
+import type { LanguageCode, PromptRequest } from "./types";
 
 export type SessionStatus =
   | "idle"
@@ -11,6 +11,14 @@ export type SessionStatus =
   | "success"
   | "needsClarification"
   | "error";
+
+/** Text to put into the form from outside it, e.g. a suggestion the user picked. */
+export type PromptDraft = {
+  prompt: string;
+  targetLanguage?: LanguageCode;
+  /** Changes on every fill, so picking the same suggestion twice still applies. */
+  id: number;
+};
 
 export type PromptSessionState = {
   status: SessionStatus;
@@ -23,7 +31,10 @@ export type PromptSessionState = {
   clarificationMessage: string | null;
   /** Identifies the insights to show; pages live in the RTK Query cache. */
   responseId: string | null;
+  /** The full question the current results answer (a thread's prompts combined). */
+  resultsFor: string | null;
   error: ApiError | null;
+  draft: PromptDraft | null;
 };
 
 export const initialState: PromptSessionState = {
@@ -33,7 +44,9 @@ export const initialState: PromptSessionState = {
   pendingPrompts: [],
   clarificationMessage: null,
   responseId: null,
+  resultsFor: null,
   error: null,
+  draft: null,
 };
 
 const { submitPrompt } = promptsApi.endpoints;
@@ -53,6 +66,9 @@ export const promptSessionSlice = createSlice({
             : "idle";
       }
     },
+    fillPrompt: (state, action: PayloadAction<Omit<PromptDraft, "id">>) => {
+      state.draft = { ...action.payload, id: (state.draft?.id ?? 0) + 1 };
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -63,16 +79,19 @@ export const promptSessionSlice = createSlice({
       })
       .addMatcher(submitPrompt.matchFulfilled, (state, action) => {
         const response = action.payload;
+        const prompt = action.meta.arg.originalArgs.prompt;
         if (response.status === "NEEDS_CLARIFICATION") {
           state.status = "needsClarification";
           state.contextId = response.contextId;
-          state.pendingPrompts.push(action.meta.arg.originalArgs.prompt);
+          state.pendingPrompts.push(prompt);
           state.clarificationMessage = response.message;
           state.responseId = null;
+          state.resultsFor = null;
           return;
         }
         state.status = "success";
         state.responseId = response.responseId;
+        state.resultsFor = [...state.pendingPrompts, prompt].join(" ");
         state.contextId = null;
         state.pendingPrompts = [];
         state.clarificationMessage = null;
@@ -95,11 +114,13 @@ export const promptSessionSlice = createSlice({
     selectPendingPrompts: (state) => state.pendingPrompts,
     selectClarificationMessage: (state) => state.clarificationMessage,
     selectResponseId: (state) => state.responseId,
+    selectResultsFor: (state) => state.resultsFor,
     selectSessionError: (state) => state.error,
+    selectDraft: (state) => state.draft,
   },
 });
 
-export const { startOver, dismissError } = promptSessionSlice.actions;
+export const { startOver, dismissError, fillPrompt } = promptSessionSlice.actions;
 export const {
   selectSessionStatus,
   selectLastRequest,
@@ -107,5 +128,7 @@ export const {
   selectPendingPrompts,
   selectClarificationMessage,
   selectResponseId,
+  selectResultsFor,
   selectSessionError,
+  selectDraft,
 } = promptSessionSlice.selectors;

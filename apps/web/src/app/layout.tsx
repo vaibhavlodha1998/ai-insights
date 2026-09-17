@@ -1,32 +1,46 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Fraunces, IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
+
+import { AppHeader } from "@/components/layout/app-header";
 import { StoreProvider } from "@/store/store-provider";
 
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
   subsets: ["latin"],
+  weight: ["500", "600"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const plexSans = IBM_Plex_Sans({
+  variable: "--font-plex-sans",
   subsets: ["latin"],
+  weight: ["400", "500", "600"],
+});
+
+const plexMono = IBM_Plex_Mono({
+  variable: "--font-plex-mono",
+  subsets: ["latin"],
+  weight: ["400", "500"],
 });
 
 export const metadata: Metadata = {
-  title: "AI Insights",
-  description: "Submit prompts to an AI middleware API and review the insights",
+  title: { default: "AI Insights", template: "%s · AI Insights" },
+  description: "Ask a question and review the insights that come back",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${fraunces.variable} ${plexSans.variable} ${plexMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-zinc-50 dark:bg-zinc-950">
-        <StoreProvider>{children}</StoreProvider>
+      <body className="flex min-h-full flex-col bg-paper text-ink">
+        {/* The store lives in the root layout, so it survives navigation between pages */}
+        <StoreProvider>
+          <AppHeader />
+          {children}
+        </StoreProvider>
       </body>
     </html>
   );

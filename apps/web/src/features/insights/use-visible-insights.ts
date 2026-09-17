@@ -6,8 +6,8 @@ import type { Insight } from "@/features/prompts/types";
 import { asApiError } from "@/lib/api/errors";
 import { useAppSelector } from "@/store/hooks";
 
-import { filterInsights, sortInsights } from "./filter-sort";
-import { selectSearchTerm, selectSortOrder } from "./insights-view-slice";
+import { filterInsights, searchWords, sortInsights } from "./filter-sort";
+import { selectSearchTerm, selectSortDirection, selectSortField } from "./insights-view-slice";
 
 const NO_INSIGHTS: Insight[] = [];
 
@@ -20,7 +20,8 @@ const NO_INSIGHTS: Insight[] = [];
 export function useVisibleInsights(responseId: string) {
   const query = useGetInsightsInfiniteQuery(responseId);
   const searchTerm = useAppSelector(selectSearchTerm);
-  const sortOrder = useAppSelector(selectSortOrder);
+  const sortField = useAppSelector(selectSortField);
+  const sortDirection = useAppSelector(selectSortDirection);
   const language = useAppSelector(selectLastRequest)?.targetLanguage ?? "en";
 
   const pages = query.data?.pages;
@@ -32,21 +33,23 @@ export function useVisibleInsights(responseId: string) {
     () => new Intl.Collator(language, { sensitivity: "base", numeric: true }),
     [language],
   );
+  const highlightWords = useMemo(() => searchWords(searchTerm), [searchTerm]);
   const filtered = useMemo(() => filterInsights(loaded, searchTerm), [loaded, searchTerm]);
   const visible = useMemo(
-    () => sortInsights(filtered, sortOrder, collator),
-    [filtered, sortOrder, collator],
+    () => sortInsights(filtered, { field: sortField, direction: sortDirection }, collator),
+    [filtered, sortField, sortDirection, collator],
   );
 
   return {
     visible,
+    searchTerm,
+    highlightWords,
     loadedCount: loaded.length,
     totalCount: pages?.at(-1)?.pagination.totalItems ?? 0,
-    isFiltered: searchTerm.trim() !== "",
     isLoading: query.isLoading,
     isFetchingNextPage: query.isFetchingNextPage,
     hasNextPage: query.hasNextPage,
     fetchNextPage: query.fetchNextPage,
-    error: asApiError(query.error),
+    loadMoreError: asApiError(query.error),
   };
 }
